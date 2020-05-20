@@ -9,17 +9,5 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class Session {
-    private static Session session;
     private User currentUser;
-
-    private Session() {
-        currentUser = new User();
-    }
-
-    public static Session getInstance() {
-        if (session == null) {
-            session = new Session();
-        }
-        return session;
-    }
 }

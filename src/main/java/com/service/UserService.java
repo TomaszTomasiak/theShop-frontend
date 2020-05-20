@@ -1,9 +1,8 @@
 package com.service;
 
 import com.client.UserClient;
-import com.config.AppConfig;
-import com.config.JsonBuilder;
 import com.domain.User;
+import com.domain.dto.UserDto;
 import com.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +31,12 @@ public class UserService {
 
     //private JsonBuilder<User> jsonBuilder = new JsonBuilder<>();
     //private List<User> users;
-    private boolean isUserLogged = false;
+    public boolean isUserLogged = false;
     private Set<User> users;
 
 
     public Set<User> getUsers() {
-        users = userClient.getUsers();
+        users = userClient.getAllUsers();
         return users;
     }
 //    public List<User> fetchAll() {
@@ -53,7 +52,7 @@ public class UserService {
 //    }
 
     public User fetchUserByMail(String mail) {
-        List<User> usersWithIndicatedMail = userClient.getUsers().stream()
+        List<User> usersWithIndicatedMail = userClient.getAllUsers().stream()
                 .filter(user -> user.getMailAdress().equals(mail.toLowerCase()))
                 .collect(Collectors.toList());
         return usersWithIndicatedMail.get(0);
@@ -80,7 +79,7 @@ public class UserService {
 //        restTemplate.put(url, jsonBuilder.prepareJson(user));
 //    }
 
-    public void delete(User user) {
+    public void delete(UserDto user) {
         userClient.deleteUser(user.getId());
     }
 
@@ -90,8 +89,8 @@ public class UserService {
 //    }
 
     public String userLogged(User user) {
-        if (!isUserLogged) {
-            return "Logged: " + user.getFirstName() + " " + user.getLastName();
+        if (isUserLogged) {
+            return "Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName();
         }
         return "You must log in to start shopping";
     }

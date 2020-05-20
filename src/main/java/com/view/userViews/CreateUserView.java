@@ -1,7 +1,7 @@
 package com.view.userViews;
 
 import com.domain.User;
-import com.form.NewUserForm;
+import com.form.CreateUserForm;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
@@ -23,7 +23,7 @@ public class CreateUserView extends VerticalLayout {
 
     //private User user = session.getCurrentUser();
 
-    private NewUserForm form = new NewUserForm(this);
+    private CreateUserForm form = new CreateUserForm(this);
     private H1 welcome = new H1("Welcome to theSHOP");
     private H3 space = new H3();
     private Text instruction = new Text("Please fill all bellow fields");
@@ -37,9 +37,9 @@ public class CreateUserView extends VerticalLayout {
         add(welcome);
         add(instruction);
 
-        VerticalLayout layout = new VerticalLayout(form);
-        add(layout);
-        layout.setAlignItems(Alignment.CENTER);
+        add(form);
+        form.setSizeFull();
+        setSizeFull();
         //refresh();
     }
 

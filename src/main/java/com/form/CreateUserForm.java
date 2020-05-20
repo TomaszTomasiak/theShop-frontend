@@ -1,6 +1,7 @@
 package com.form;
 
 import com.domain.User;
+import com.domain.dto.UserDto;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
@@ -20,7 +21,7 @@ import com.view.userViews.CreateUserView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class NewUserForm extends FormLayout {
+public class CreateUserForm extends FormLayout {
 
     @Autowired
     UserService userService;
@@ -39,20 +40,23 @@ public class NewUserForm extends FormLayout {
     private PasswordField password = new PasswordField("Password");
     //private PasswordField repeatPassword = new PasswordField("Repeat password");
     private Button save = new Button("Create account");
-    private Button cancel = new Button("- - Cancel - -");
+    private Button cancel = new Button("Cancel");
     private Binder<User> binder = new Binder<>(User.class);
     private Text notFit = new Text("Password and repeated password are not the same");
     private User user;
 
     private CreateUserView createUserView;
 
-    public NewUserForm(CreateUserView createUserView) {
+    public CreateUserForm(CreateUserView createUserView) {
         this.createUserView = createUserView;
+        setSizeFull();
         firstName.setWidth("350px");
         lastName.setWidth("350px");
         mailAdress.setWidth("350px");
         phoneNumber.setWidth("350px");
         password.setWidth("350px");
+        save.setWidth("170px");
+        cancel.setWidth("170px");
         //repeatPassword.setWidth("350px");
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -60,9 +64,8 @@ public class NewUserForm extends FormLayout {
 
         VerticalLayout layout = new VerticalLayout(id, firstName, lastName, mailAdress, phoneNumber, password, buttons);
         add(layout);
-        layout.setAlignItems(FlexComponent.Alignment.CENTER);
-        layout.setSizeFull();
         id.setVisible(false);
+        id.setValue(null);
         binder.forField(id).withConverter(Double::longValue, Long::doubleValue).bind(User::getId, User::setId);
         binder.bindInstanceFields(this);
 
@@ -75,11 +78,15 @@ public class NewUserForm extends FormLayout {
 
     private void save() {
         User user = binder.getBean();
-        session.setCurrentUser(user);
         userService.save(user);
         //Long userId = session.getCurrentUser().getId();
-        if (validator.validateUser(user)) {
-            getUI().ifPresent(ui -> ui.navigate("user_view"));
+        if (validateUser(user)) {
+           if( validatePassword(user)) {
+               session.setCurrentUser(user);
+               userService.isUserLogged = true;
+               getUI().ifPresent(ui -> ui.navigate("user_view"));
+           }
+
         }
     }
 
@@ -97,4 +104,26 @@ public class NewUserForm extends FormLayout {
 //            firstName.focus();
 //        }
 //    }
+
+    public boolean validateUser(User user) {
+
+        String mail = mailAdress.getValue();
+
+        if(!userService.fetchUserByMail(user.getMailAdress()).equals(mail)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validatePassword(User user) {
+
+        String pass = password.getValue();
+
+        if ((userService.fetchUserByMail(user.getMailAdress())).equals(pass)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
