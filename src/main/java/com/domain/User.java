@@ -28,5 +28,4 @@ public class User {
 
     @JsonProperty
     private String password;
-
 }

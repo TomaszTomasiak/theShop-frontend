@@ -1,8 +1,7 @@
 package com.client;
 
-
 import com.config.AppConfig;
-import com.domain.User;
+import com.domain.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +17,20 @@ import java.util.Set;
 
 import static java.util.Optional.ofNullable;
 
-
 @Component
-public class UserClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserClient.class);
+public class ItemClient {
 
     @Autowired
-    private RestTemplate restTemplate;
+    RestTemplate restTemplate;
 
-    public Set<User> getAllUsers() {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemClient.class);
+
+    public Set<Item> getAllItems() {
 
         URI url = getUrl();
         try {
-            User[] usersResponse = restTemplate.getForObject(url, User[].class);
-            return new HashSet<>(Arrays.asList(ofNullable(usersResponse).orElse(new User[0])));
+            Item[] usersResponse = restTemplate.getForObject(url, Item[].class);
+            return new HashSet<>(Arrays.asList(ofNullable(usersResponse).orElse(new Item[0])));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
             return new HashSet<>();
@@ -40,24 +38,25 @@ public class UserClient {
     }
 
     private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users")
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/items")
                 .build().encode().toUri();
+
         return url;
     }
 
-    public User getUser(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public Item getItem(Long id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/items/" + id)
                 .build().encode().toUri();
         try {
-            return restTemplate.getForObject(url, User.class);
+            return restTemplate.getForObject(url, Item.class);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-            return new User();
+            return new Item();
         }
     }
 
-    public void deleteUser(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public void deleteItem(Long id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/items/" + id)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -66,19 +65,18 @@ public class UserClient {
         }
     }
 
-    public User createNewUser(User user) {
+    public Item createNewItem(Item item) {
         URI url = getUrl();
-        return restTemplate.postForObject(url, user, User.class);
+        return restTemplate.postForObject(url, item, Item.class);
     }
 
-    public void updateUser(Long userId, User user) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public void updateItem(Long id, Item item) {
+        URI url = getUrl();UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/items/" + id)
                 .build().encode().toUri();
         try {
-        restTemplate.put(url, user);
+        restTemplate.put(url, item);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
 }
-

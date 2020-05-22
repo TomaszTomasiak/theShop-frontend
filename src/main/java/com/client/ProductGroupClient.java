@@ -6,6 +6,7 @@ import com.domain.ProductGroup;
 import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +24,9 @@ import static java.util.Optional.ofNullable;
 public class ProductGroupClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductGroupClient.class);
-        private RestTemplate restTemplate = new RestTemplate();
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Set<ProductGroup> getAllGroups() {
 
@@ -70,9 +73,14 @@ public class ProductGroupClient {
         return restTemplate.postForObject(url, productGroup, ProductGroup.class);
     }
 
-    public void updateGroup(ProductGroup productGroup) {
-        URI url = getUrl();
+    public void updateGroup(Long groupId, ProductGroup productGroup) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/groups/" + groupId)
+                .build().encode().toUri();
+        try {
         restTemplate.put(url, productGroup);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }
 

@@ -6,6 +6,7 @@ import com.domain.Product;
 import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +24,9 @@ import static java.util.Optional.ofNullable;
 public class ProductClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductClient.class);
-        private RestTemplate restTemplate = new RestTemplate();
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Set<Product> getAllProducts() {
 
@@ -69,9 +72,14 @@ public class ProductClient {
         return restTemplate.postForObject(url, product, Product.class);
     }
 
-    public void updateProduct(Product product) {
-        URI url = getUrl();
+    public void updateProduct(Long productId, Product product) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/products/" + productId)
+                .build().encode().toUri();
+        try {
         restTemplate.put(url, product);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }
 

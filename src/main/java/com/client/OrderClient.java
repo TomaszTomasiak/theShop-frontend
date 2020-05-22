@@ -5,6 +5,7 @@ import com.domain.Order;
 import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -21,7 +22,9 @@ import static java.util.Optional.ofNullable;
 public class OrderClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderClient.class);
-        private RestTemplate restTemplate = new RestTemplate();
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Set<Order> getAllOrders() {
 
@@ -41,8 +44,8 @@ public class OrderClient {
         return url;
     }
 
-    public Order getOrder(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/orders/" + userId)
+    public Order getOrder(Long orderId) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/orders/" + orderId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, Order.class);
@@ -68,9 +71,14 @@ public class OrderClient {
         return restTemplate.postForObject(url, order, Order.class);
     }
 
-    public void updateOrder(Order order) {
-        URI url = getUrl();
-        restTemplate.put(url, order);
+    public void updateOrder(Long orderId, Order order) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/orders/" + orderId)
+                .build().encode().toUri();
+        try {
+            restTemplate.put(url, order);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }
 

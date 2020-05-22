@@ -3,9 +3,9 @@ package com.client;
 
 import com.config.AppConfig;
 import com.domain.Cart;
-import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +23,9 @@ import static java.util.Optional.ofNullable;
 public class CartClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartClient.class);
-        private RestTemplate restTemplate = new RestTemplate();
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public Set<Cart> getAllCarts() {
 
@@ -69,9 +71,20 @@ public class CartClient {
         return restTemplate.postForObject(url, cart, Cart.class);
     }
 
-    public void updateCart(Cart cart) {
-        URI url = getUrl();
-        restTemplate.put(url, cart);
+    public void updateCart(Long cartId, Cart cart) {
+        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cartId)
+                .build().encode().toUri();
+        try {
+            restTemplate.put(url, cart);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
+
+//    public void addUpdateRemoveItemFromCart(Cart cart, Long itemId) {
+//        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cart.getId() + "&" + itemId)
+//                .build().encode().toUri();
+//        restTemplate.put(url, cart);
+//    }
 }
 

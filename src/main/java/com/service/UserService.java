@@ -2,7 +2,6 @@ package com.service;
 
 import com.client.UserClient;
 import com.domain.User;
-import com.domain.dto.UserDto;
 import com.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +16,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
-    RestTemplate restTemplate;
-//    private RestTemplate restTemplate = new RestTemplate();
-
-    //private Session session = Session.getInstance();
 
     @Autowired
-    Session session;
+    private Session session;
 
     @Autowired
-    UserClient userClient;
+    private UserClient userClient;
 
     //private JsonBuilder<User> jsonBuilder = new JsonBuilder<>();
     //private List<User> users;
@@ -70,7 +64,7 @@ public class UserService {
         if (session.getCurrentUser().getMailAdress()==null) {
             userClient.createNewUser(user);
         } else {
-            userClient.updateUser(user);
+            userClient.updateUser(user.getId(), user);
         }
     }
 
@@ -79,7 +73,7 @@ public class UserService {
 //        restTemplate.put(url, jsonBuilder.prepareJson(user));
 //    }
 
-    public void delete(UserDto user) {
+    public void delete(User user) {
         userClient.deleteUser(user.getId());
     }
 

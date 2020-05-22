@@ -33,10 +33,10 @@ public class MainView extends VerticalLayout {
         //eurField.setValue(currencyService.getEUR());
         usdField.setLabel("USD");
         usdField.setReadOnly(true);
-        usdField.setValue(currencyService.getUSD());
+        //usdField.setValue(currencyService.getUSD());
         gbpField.setLabel("GBP");
         gbpField.setReadOnly(true);
-        gbpField.setValue(currencyService.getGBP());
+        //gbpField.setValue(currencyService.getGBP());
         HorizontalLayout currencies = new HorizontalLayout(eurField, usdField, gbpField);
         add(adminButton, currencies);
         setSizeFull();
