@@ -30,12 +30,13 @@ public class UserView extends VerticalLayout {
 
     private TextField filter = new TextField();
     private Button logout = new Button("Log out");
-    private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
+    private Text logged = new Text("");
     private Button showProducts = new Button("Show all products");
     private Grid<ProductGroup> gridGroup = new Grid<>(ProductGroup.class);
     private Grid<Product> gridProduct = new Grid<>(Product.class);
 
     public UserView() {
+        logged.setText("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
         filter.setPlaceholder("Filter by product name");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -51,11 +52,11 @@ public class UserView extends VerticalLayout {
 
         HorizontalLayout mainContent = new HorizontalLayout(gridGroup, gridProduct);
         mainContent.setSizeFull();
-        gridGroup.setSizeFull();
+        //gridGroup.setSizeFull();
 
         gridGroup.asSingleSelect().addValueChangeListener(event -> {
             gridGroup.asSingleSelect().clear();
-            gridProduct.setItems(productService.getProducts().stream()
+            gridProduct.setItems(productService.getAllProducts().stream()
                     .filter(product -> product.getGroupId().equals(gridGroup.asSingleSelect().getValue().getId())));
         });
 
@@ -66,7 +67,6 @@ public class UserView extends VerticalLayout {
 
         showProducts.addClickListener(event -> refresh());
         add(header, mainContent);
-
 
         logout.addClickListener(event -> {
             session.cleanAll();
@@ -83,7 +83,7 @@ public class UserView extends VerticalLayout {
 
     public void refresh() {
         gridGroup.setItems(productGroupService.getGroups());
-        gridProduct.setItems(productService.getProducts());
+        gridProduct.setItems(productService.getAllProducts());
     }
 
 

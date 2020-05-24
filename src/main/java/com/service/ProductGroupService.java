@@ -6,6 +6,7 @@ import com.domain.ProductGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -14,9 +15,9 @@ public class ProductGroupService {
     @Autowired
     private ProductGroupClient client;
 
-    private Set<ProductGroup> groups;
+    private List<ProductGroup> groups;
 
-    public Set<ProductGroup> getGroups() {
+    public List<ProductGroup> getGroups() {
         groups = client.getAllGroups();
         return groups;
     }

@@ -6,42 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-@NoArgsConstructor
 @Service
 public class CurrencyService {
 
    @Autowired
    private RestTemplate restTemplate;
 
+   @Autowired
+   private AppConfig appConfig;
+
     public Double getEUR() {
-        String urlEur = AppConfig.backendEndpoint + "/currency/eur";
+        String urlEur = appConfig.getBackendEndpoint() + "/currency/eur";
         Double EUR = (Double) restTemplate.getForObject(urlEur, Object.class);
         return EUR;
     }
 
     public Double getUSD() {
-        String urlUsd = AppConfig.backendEndpoint + "/currency/usd";
+        String urlUsd = appConfig.getBackendEndpoint() + "/currency/usd";
         Double USD = (Double) restTemplate.getForObject(urlUsd, Object.class);
         return USD;
     }
 
     public Double getGBP() {
-        String urlGbp = AppConfig.backendEndpoint + "/currency/gbp";
+        String urlGbp = appConfig.getBackendEndpoint() + "/currency/gbp";
         Double GBP = (Double) restTemplate.getForObject(urlGbp, Object.class);
         return GBP;
     }
 
-    public Double priceEUR (Double pricePln) {
+    public Double valueEUR(Double pricePln) {
         Double result = pricePln / getEUR();
         return roundToDecimal(result, 2);
     }
 
-    public Double priceGBP (Double pricePln) {
+    public Double valueGBP(Double pricePln) {
         Double result = pricePln / getGBP();
         return roundToDecimal(result, 2);
     }
 
-    public Double priceUSD (Double pricePln) {
+    public Double valueUSD(Double pricePln) {
         Double result = pricePln / getUSD();
         return roundToDecimal(result, 2);
     }

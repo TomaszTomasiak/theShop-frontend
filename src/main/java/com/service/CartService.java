@@ -5,6 +5,7 @@ import com.domain.Cart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -13,9 +14,9 @@ public class CartService {
     @Autowired
     private CartClient cartClient;
 
-    private Set<Cart> carts;
+    private List<Cart> carts;
 
-    public Set<Cart> getCarts() {
+    public List<Cart> getCarts() {
         carts = cartClient.getAllCarts();
         return carts;
     }
@@ -24,15 +25,15 @@ public class CartService {
         return cartClient.getCart(cartId);
     }
 
-    public void save(Cart cart) {
+    public void saveCart(Cart cart) {
         cartClient.createNewCart(cart);
     }
 
-    public void update(Cart cart) {
+    public void updateCart(Cart cart) {
         cartClient.updateCart(cart.getId(), cart);
     }
 
-    public void delete(Cart cart) {
+    public void deleteCart(Cart cart) {
         cartClient.deleteCart(cart.getId());
     }
 

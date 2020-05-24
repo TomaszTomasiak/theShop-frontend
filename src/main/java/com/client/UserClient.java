@@ -1,8 +1,7 @@
 package com.client;
 
-
 import com.config.AppConfig;
-import com.domain.User;
+import com.domain.UserDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
-
 
 @Component
 public class UserClient {
@@ -27,37 +23,38 @@ public class UserClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Set<User> getAllUsers() {
+    @Autowired
+    private AppConfig appConfig;
 
-        URI url = getUrl();
+    public List<UserDto> getAllUsers() {
         try {
-            User[] usersResponse = restTemplate.getForObject(url, User[].class);
-            return new HashSet<>(Arrays.asList(ofNullable(usersResponse).orElse(new User[0])));
+            UserDto[] usersResponse = restTemplate.getForObject(getUrl(), UserDto[].class);
+            return Arrays.asList(ofNullable(usersResponse).orElse(new UserDto[0]));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-            return new HashSet<>();
+            return new ArrayList<>();
         }
     }
 
     private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users")
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users")
                 .build().encode().toUri();
         return url;
     }
 
-    public User getUser(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public UserDto getUser(Long userId) {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
                 .build().encode().toUri();
         try {
-            return restTemplate.getForObject(url, User.class);
+            return restTemplate.getForObject(url, UserDto.class);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-            return new User();
+            return new UserDto();
         }
     }
 
-    public void deleteUser(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public void deleteUser(Integer userId) {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -66,16 +63,15 @@ public class UserClient {
         }
     }
 
-    public User createNewUser(User user) {
-        URI url = getUrl();
-        return restTemplate.postForObject(url, user, User.class);
+    public void saveUser(UserDto userDto) {
+        restTemplate.postForObject(getUrl(), userDto, UserDto.class);
     }
 
-    public void updateUser(Long userId, User user) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/users/" + userId)
+    public void updateUser(Long userId, UserDto userDto) {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
                 .build().encode().toUri();
         try {
-        restTemplate.put(url, user);
+        restTemplate.put(url, userDto);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }

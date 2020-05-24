@@ -5,6 +5,7 @@ import com.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,11 +15,8 @@ public class ProductService {
     @Autowired
     private ProductClient productClient;
 
-    private Set<Product> products;
-
-    public Set<Product> getProducts() {
-        products = productClient.getAllProducts();
-        return products;
+    public List<Product> getAllProducts() {
+        return productClient.getAllProducts();
     }
 
     public Product getProduct(Long id) {
@@ -38,9 +36,8 @@ public class ProductService {
     }
 
     public Set<Product> findByProductName(String name) {
-        return getProducts().stream()
+        return getAllProducts().stream()
                 .filter(product -> product.getName().contains(name))
                 .collect(Collectors.toSet());
     }
-
 }

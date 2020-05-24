@@ -1,12 +1,9 @@
 package com.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
 public class Item {
 
@@ -19,6 +16,13 @@ public class Item {
     @JsonProperty
     private int quantity;
 
-    @JsonProperty
-    private Long orderId;
+//    @JsonProperty
+//    private Long orderId;
+
+    public Item(Long productId, int quantity) {
+        this.productId = productId;
+        this.quantity = quantity;
+    }
+
+
 }

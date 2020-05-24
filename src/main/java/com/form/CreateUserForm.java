@@ -1,6 +1,6 @@
 package com.form;
 
-import com.domain.User;
+import com.domain.UserDto;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
@@ -9,38 +9,31 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.binder.Binder;
-import com.validator.Validator;
 import com.view.userViews.CreateUserView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class CreateUserForm extends FormLayout {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    Validator validator;
+    private Session session;
 
-    @Autowired
-    Session session;
+    private final IntegerField id = new IntegerField();
+    private final TextField firstName = new TextField("First name");
+    private final TextField lastName = new TextField("Last name");
+    private final EmailField mailAdress = new EmailField("Mail adress");
+    private final TextField phoneNumber = new TextField("Phone number");
+    private final PasswordField password = new PasswordField("Password");
+    private final Button save = new Button("Create account");
+    private final Button cancel = new Button("Cancel");
+    private final Binder<UserDto> binder = new Binder<>(UserDto.class);
+    private final Text notFit = new Text("Password and repeated password are not the same");
 
-    private NumberField id = new NumberField();
-    private TextField firstName = new TextField("First name");
-    private TextField lastName = new TextField("Last name");
-    private EmailField mailAdress = new EmailField("Mail adress");
-    private TextField phoneNumber = new TextField("Phone number");
-    private PasswordField password = new PasswordField("Password");
-    private Button save = new Button("Create account");
-    private Button cancel = new Button("Cancel");
-    private Binder<User> binder = new Binder<>(User.class);
-    private Text notFit = new Text("Password and repeated password are not the same");
-
-    private CreateUserView createUserView;
+    private final CreateUserView createUserView;
 
     public CreateUserForm(CreateUserView createUserView) {
         this.createUserView = createUserView;
@@ -54,26 +47,39 @@ public class CreateUserForm extends FormLayout {
         cancel.setWidth("170px");
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        VerticalLayout layout = new VerticalLayout(id, firstName, lastName, mailAdress, phoneNumber, password, buttons);
-        add(layout);
-        id.setVisible(false);
-        id.setValue(null);
-        binder.forField(id).withConverter(Double::longValue, Long::doubleValue).bind(User::getId, User::setId);
-        binder.bindInstanceFields(this);
+        VerticalLayout fields = new VerticalLayout(firstName, lastName, mailAdress, phoneNumber, password, buttons);
+        add(fields);
+        //id.setValue(1);
+        //id.setVisible(false);
+        //binder.forField(id).withConverter(Integer::longValue, Long::intValue).bind(UserDto::getId, UserDto::setId);
+//        binder.bindInstanceFields(this);
         firstName.focus();
-        save.addClickListener(event -> save());
+        save.addClickListener(event -> {
+            if (saveUser()) {
+                getUI().ifPresent(ui -> ui.navigate("user_view"));
+            } else {
+                createUserView.info(new Text("Ups. Something goes wrong. Try again later"));
+            }
+        });
         cancel.addClickListener(event -> cancel());
     }
 
-    private void save() {
-        User user = binder.getBean();
-        userService.save(user);
-        if (validateUser(user)) {
-           if( validatePassword(user)) {
-               session.setCurrentUser(user);
-               userService.isUserLogged = true;
-               getUI().ifPresent(ui -> ui.navigate("user_view"));
-           }
+    private boolean saveUser() {
+        //UserDto newUserDto = binder.getBean();
+        UserDto newUserDto =
+                new UserDto(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
+
+        userService.saveUser(newUserDto);
+        return isUserCreated();
+    }
+
+    private boolean isUserCreated() {
+        UserDto createdUserDto = userService.fetchUserByMail(mailAdress.getValue());
+        if (createdUserDto.getId() != null) {
+            session.setCurrentUserDto(createdUserDto);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -81,25 +87,7 @@ public class CreateUserForm extends FormLayout {
         getUI().ifPresent(ui -> ui.navigate(""));
     }
 
-
-    public boolean validateUser(User user) {
-
-        String mail = mailAdress.getValue();
-
-        if(!userService.fetchUserByMail(user.getMailAdress()).equals(mail)) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean validatePassword(User user) {
-
-        String pass = password.getValue();
-
-        if ((userService.fetchUserByMail(user.getMailAdress())).equals(pass)){
-            return true;
-        } else {
-            return false;
-        }
+    public CreateUserView getCreateUserView() {
+        return createUserView;
     }
 }

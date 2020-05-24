@@ -10,7 +10,7 @@ public class UserValidator {
     @Autowired
     UserService userService;
 
-//    public boolean validateUser (User user) {
+//    public boolean validateUser (UserDto user) {
 //        user = userService.userByMail(user.getMailAdress());
 //        if (user != null) {
 //            return true;
@@ -25,6 +25,18 @@ public class UserValidator {
 //        }
 //        if (!userService.getUser(userId).isPresent()) {
 //            throw new UserException(UserException.ERR_USER_NOT_FOUND);
+//        }
+//    }
+
+//    public boolean validatePassword(UserDto user) {
+//
+//        String pass = password.getValue();
+//
+//        if ((userService.fetchUserByMail(user.getMailAdress())).equals(user.getPassword())){
+//            return true;
+//        } else {
+//            add(new Text("incorrect password"));
+//            return false;
 //        }
 //    }
 }

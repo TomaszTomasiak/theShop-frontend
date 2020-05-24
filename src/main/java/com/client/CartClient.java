@@ -12,9 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
@@ -27,26 +25,29 @@ public class CartClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Set<Cart> getAllCarts() {
+    @Autowired
+    private AppConfig appConfig;
+
+    public List<Cart> getAllCarts() {
 
         URI url = getUrl();
         try {
             Cart[] usersResponse = restTemplate.getForObject(url, Cart[].class);
-            return new HashSet<>(Arrays.asList(ofNullable(usersResponse).orElse(new Cart[0])));
+            return Arrays.asList(ofNullable(usersResponse).orElse(new Cart[0]));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
-            return new HashSet<>();
+            return new ArrayList<>();
         }
     }
 
     private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts")
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts")
                 .build().encode().toUri();
         return url;
     }
 
     public Cart getCart(Long cartId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, Cart.class);
@@ -57,7 +58,7 @@ public class CartClient {
     }
 
     public void deleteCart(Long cartId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -66,13 +67,13 @@ public class CartClient {
         }
     }
 
-    public Cart createNewCart(Cart cart) {
+    public void createNewCart(Cart cart) {
         URI url = getUrl();
-        return restTemplate.postForObject(url, cart, Cart.class);
+        restTemplate.postForObject(url, cart, Cart.class);
     }
 
     public void updateCart(Long cartId, Cart cart) {
-        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
                 .build().encode().toUri();
         try {
             restTemplate.put(url, cart);
@@ -81,10 +82,10 @@ public class CartClient {
         }
     }
 
-//    public void addUpdateRemoveItemFromCart(Cart cart, Long itemId) {
-//        URI url = UriComponentsBuilder.fromHttpUrl(AppConfig.backendEndpoint + "/carts/" + cart.getId() + "&" + itemId)
-//                .build().encode().toUri();
-//        restTemplate.put(url, cart);
-//    }
+    public void addUpdateRemoveItemFromCart(Cart cart, Long itemId) {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cart.getId() + "&" + itemId)
+                .build().encode().toUri();
+        restTemplate.put(url, cart);
+    }
 }
 
