@@ -68,8 +68,7 @@ public class CartClient {
     }
 
     public void createNewCart(Cart cart) {
-        URI url = getUrl();
-        restTemplate.postForObject(url, cart, Cart.class);
+        restTemplate.postForObject(getUrl(), cart, Cart.class);
     }
 
     public void updateCart(Long cartId, Cart cart) {

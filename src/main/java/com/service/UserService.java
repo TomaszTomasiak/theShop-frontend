@@ -1,18 +1,16 @@
 package com.service;
 
 import com.client.UserClient;
-import com.domain.UserDto;
+import com.domain.User;
 import com.session.Session;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Component
-@NoArgsConstructor
+@Service
 public class UserService {
 
     @Autowired
@@ -22,58 +20,57 @@ public class UserService {
     private UserClient userClient;
 
     public boolean isUserLogged = false;
-//    private List<UserDto> userDtos;
 
+    public List<User> users;
 
-    public List<UserDto> getUserDtos() {
-//        userDtos = userClient.getAllUsers();
-        return userClient.getAllUsers();
+    public List<User> getUsers() {
+        users = userClient.getAllUsers();
+        return users;
     }
 
-    public UserDto fetchUserByMail(String mail) {
-        List<UserDto> usersWithIndicatedMail = userClient.getAllUsers().stream()
+    public User fetchUserByMail(String mail) {
+        List<User> usersWithIndicatedMail = userClient.getAllUsers().stream()
                 .filter(user -> user.getMailAdress().equals(mail.toLowerCase()))
                 .collect(Collectors.toList());
         return usersWithIndicatedMail.get(0);
     }
 
-    public void saveUser(UserDto userDto) {
-            userClient.saveUser(userDto);
+    public void createNewUser(User user) {
+          userClient.saveUser(user);
     }
 
-
-    public void delete(UserDto userDto) {
-        userClient.deleteUser(userDto.getId());
+    public void delete(User user) {
+        userClient.deleteUser(user.getId());
     }
 
     public long count() {
-        return getUserDtos().size();
+        return users.size();
     }
 
-    public String userLogged(UserDto userDto) {
+    public String userLogged(User user) {
         if (isUserLogged) {
-            return "Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName();
+            return "Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName();
         }
         return "You must log in to start shopping";
     }
 
-    public UserDto getUser(Long userId) {
+    public User getUser(Long userId) {
         return userClient.getUser(userId);
     }
 
-    public Set<UserDto> findByLastName(String lastName) {
-        return getUserDtos().stream().filter(user -> user.getLastName().contains(lastName)).collect(Collectors.toSet());
+    public Set<User> findByLastName(String lastName) {
+        return getUsers().stream().filter(user -> user.getLastName().contains(lastName)).collect(Collectors.toSet());
     }
 
-    public Set<UserDto> findByFirstName(String firstName) {
-        return getUserDtos().stream().filter(user -> user.getFirstName().contains(firstName)).collect(Collectors.toSet());
+    public Set<User> findByFirstName(String firstName) {
+        return getUsers().stream().filter(user -> user.getFirstName().contains(firstName)).collect(Collectors.toSet());
     }
 
-    public Set<UserDto> findByMail(String mail) {
-        return getUserDtos().stream().filter(user -> user.getMailAdress().contains(mail)).collect(Collectors.toSet());
+    public Set<User> findByMail(String mail) {
+        return getUsers().stream().filter(user -> user.getMailAdress().contains(mail)).collect(Collectors.toSet());
     }
 
-    public Set<UserDto> findByPhoneNumber(String phone) {
-        return getUserDtos().stream().filter(user -> user.getPhoneNumber().contains(phone)).collect(Collectors.toSet());
+    public Set<User> findByPhoneNumber(String phone) {
+        return getUsers().stream().filter(user -> user.getPhoneNumber().contains(phone)).collect(Collectors.toSet());
     }
 }

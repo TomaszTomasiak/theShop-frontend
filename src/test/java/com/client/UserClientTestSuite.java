@@ -1,7 +1,7 @@
 package com.client;
 
 import com.config.AppConfig;
-import com.domain.UserDto;
+import com.domain.User;
 
 
 import org.junit.Before;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserDtoClientTestSuite {
+public class UserClientTestSuite {
 
     private String endpoint = "http://test.com";
     private String test = "test";
@@ -50,34 +50,34 @@ public class UserDtoClientTestSuite {
     @Test
     public void shouldFetchAllUsers() throws URISyntaxException {
         //Given
-        UserDto[] userDtos = new UserDto[1];
-        userDtos[0] = new UserDto(id, firstName, lastName, mail, phoneNumber, password);
+        User[] users = new User[1];
+        users[0] = new User(id, firstName, lastName, mail, phoneNumber, password);
 
-        when(restTemplate.getForObject(url(), UserDto[].class)).thenReturn(userDtos);
+        when(restTemplate.getForObject(url(), User[].class)).thenReturn(users);
 
         //When
-        List<UserDto> fetchedUserDtos = userClient.getAllUsers();
+        List<User> fetchedUsers = userClient.getAllUsers();
 
         //Then
-        assertEquals(1, fetchedUserDtos.size());
-        assertEquals(12, fetchedUserDtos.get(0).getId());
-        assertEquals("TestFirstName", fetchedUserDtos.get(0).getFirstName());
+        assertEquals(1, fetchedUsers.size());
+        assertEquals(12, fetchedUsers.get(0).getId());
+        assertEquals("TestFirstName", fetchedUsers.get(0).getFirstName());
     }
 
     @Test
     public void shouldCreateUser() {
         //Given
-        UserDto userDto = new UserDto(1, firstName, lastName, mail, phoneNumber, password);
-        UserDto createdUserDto = new UserDto(15, firstName, lastName, mail, phoneNumber, password);
+        User user = new User(1, firstName, lastName, mail, phoneNumber, password);
+        User createdUser = new User(15, firstName, lastName, mail, phoneNumber, password);
 
-        when(restTemplate.postForObject(url(), userDto, UserDto.class)).thenReturn(createdUserDto);
+        when(restTemplate.postForObject(url(), user, User.class)).thenReturn(createdUser);
 
         //When
-        UserDto newUserDto = userClient.saveUser(userDto);
+        User newUser = userClient.saveUser(user);
 
         //Then
-        assertEquals(15, newUserDto.getId());
-        assertEquals("TestFirstName", newUserDto.getFirstName());
+        assertEquals(15, newUser.getId());
+        assertEquals("TestFirstName", newUser.getFirstName());
 
     }
 
@@ -85,13 +85,13 @@ public class UserDtoClientTestSuite {
     public void shouldReturnEmptyList() {
         //Given
 
-        when(restTemplate.getForObject(url(), UserDto[].class)).thenReturn(null);
+        when(restTemplate.getForObject(url(), User[].class)).thenReturn(null);
 
         //When
-        List<UserDto> fetchedUserDtos = userClient.getAllUsers();
+        List<User> fetchedUsers = userClient.getAllUsers();
 
         //Then
-        assertEquals(0, fetchedUserDtos.size());
+        assertEquals(0, fetchedUsers.size());
 
     }
 

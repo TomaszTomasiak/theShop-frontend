@@ -10,7 +10,7 @@ public class UserValidator {
     @Autowired
     UserService userService;
 
-//    public boolean validateUser (UserDto user) {
+//    public boolean validateUser (User user) {
 //        user = userService.userByMail(user.getMailAdress());
 //        if (user != null) {
 //            return true;
@@ -28,7 +28,7 @@ public class UserValidator {
 //        }
 //    }
 
-//    public boolean validatePassword(UserDto user) {
+//    public boolean validatePassword(User user) {
 //
 //        String pass = password.getValue();
 //

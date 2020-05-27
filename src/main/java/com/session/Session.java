@@ -1,48 +1,45 @@
 package com.session;
 
 import com.domain.*;
-import com.form.ProductsList;
+import com.domain.ProductOnCart;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @Getter
 @Setter
-public class Session implements Serializable{
+public class Session implements Serializable {
 
-    private UserDto currentUserDto; // = new UserDto(1L, "Adam", "Sandler", "abc@abc.com", "123456789", "password");
-    private Order order;
-    private Product product;
-    private Item item;
-    private Cart cart;
-    private ProductGroup productGroup;
-    private List<ProductsList> listOfProductsOnCart;
-
-    private Session() {
-        this.currentUserDto = new UserDto();
-        this.order = new Order();
-        this.product = new Product();
-        this.item = new Item();
-        this.cart = new Cart();
-        this.productGroup = new ProductGroup();
-        this.listOfProductsOnCart = new ArrayList<>();
-    }
+    private User currentUser = new User();
+    private Order order = new Order();
+    private Product product = new Product();
+    private Item item = new Item();
+    private Cart cart = new Cart();
+    private ProductGroup productGroup = new ProductGroup();
+    private List<ProductOnCart> listOfProductsOnCart = new ArrayList<>();
 
     public void cleanAll() {
-        currentUserDto = null;
-        cart = null;
-        order = null;
-        product = null;
-        item = null;
-        productGroup = null;
+        currentUser = new User();
+        cart = new Cart();
+        order = new Order();
+        product = new Product();
+        item = new Item();
+        productGroup = new ProductGroup();
 
-        for (ProductsList tmp:listOfProductsOnCart) {
+        for (ProductOnCart tmp:listOfProductsOnCart) {
             listOfProductsOnCart.remove(tmp);
         }
+    }
+
+    private BigDecimal orderTotalValue() {
+        return BigDecimal.valueOf(getListOfProductsOnCart().stream()
+                .mapToDouble(i -> i.getValue())
+                .sum()).setScale(2);
     }
 }

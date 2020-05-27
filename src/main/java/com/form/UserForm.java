@@ -1,12 +1,12 @@
 package com.form;
 
-import com.domain.UserDto;
+import com.domain.User;
 import com.service.UserService;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.view.adminViews.UsersAdminView;
@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserForm extends FormLayout {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    private Text id = new Text("UserDto Id");
+    private IntegerField id = new IntegerField("User Id");
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
     private TextField mailAdress = new TextField("E-mail adress");
@@ -26,10 +26,10 @@ public class UserForm extends FormLayout {
 
     private Button save = new Button("Save");
     private Button delete = new Button("Delete");
-    private Binder<UserDto> binder = new Binder<>(UserDto.class);
+    private Binder<User> binder = new Binder<>(User.class);
 
 
-    private UsersAdminView usersAdminView;
+    private final UsersAdminView usersAdminView;
 
     public UserForm(UsersAdminView usersAdminView) {
         this.usersAdminView = usersAdminView;
@@ -42,25 +42,23 @@ public class UserForm extends FormLayout {
     }
 
     private void save() {
-        UserDto userDto = binder.getBean();
-        userService.saveUser(userDto);
+        User user = binder.getBean();
+        userService.createNewUser(user);
         setUser(null);
         usersAdminView.refresh();
     }
 
     private void delete() {
-        UserDto userDto = binder.getBean();
-
-        //userService.delete(userDto);
+        User user = binder.getBean();
+        userService.delete(user);
         setUser(null);
         usersAdminView.refresh();
-
     }
 
-    public void setUser(UserDto userDto) {
-        binder.setBean(userDto);
+    public void setUser(User user) {
+        binder.setBean(user);
 
-        if (userDto == null) {
+        if (user == null) {
             setVisible(false);
         } else {
             setVisible(true);

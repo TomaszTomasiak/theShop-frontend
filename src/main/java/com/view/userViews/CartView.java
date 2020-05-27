@@ -1,10 +1,6 @@
 package com.view.userViews;
 
-import com.domain.Item;
-import com.service.CartService;
-import com.service.CurrencyService;
-import com.service.ItemService;
-import com.service.OrderService;
+import com.domain.ProductOnCart;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -21,22 +17,10 @@ public class CartView extends VerticalLayout {
     @Autowired
     private Session session;
 
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private ItemService itemService;
-
-    @Autowired
-    CartService cartService;
-
-    @Autowired
-    OrderService orderService;
-
     private Button back = new Button("Return to shopping");
     private Button logout = new Button("Log out");
-    private Text logged = new Text("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
-    private Grid<Item> listOfProductsOnCarts = new Grid<>(Item.class);
+    private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
+    private Grid<ProductOnCart> grid = new Grid<>(ProductOnCart.class);
 
     public CartView() {
         setAlignItems(Alignment.CENTER);
@@ -47,7 +31,6 @@ public class CartView extends VerticalLayout {
         header.setSpacing(true);
 
         back.addClickListener(event -> {
-            //session.setProduct(null);
             getUI().ifPresent(ui -> ui.navigate("user_view"));
         });
 
@@ -56,6 +39,12 @@ public class CartView extends VerticalLayout {
             getUI().ifPresent(ui -> ui.navigate(""));
         });
 
-        listOfProductsOnCarts.setColumns("product", "price", "quantity", "value");
+        grid.setColumns("product", "price", "quantity", "value");
+        add(grid);
+        refresh();
+    }
+
+    public void refresh() {
+        grid.setItems(session.getListOfProductsOnCart());
     }
 }

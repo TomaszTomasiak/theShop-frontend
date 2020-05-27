@@ -36,7 +36,7 @@ public class UserView extends VerticalLayout {
     private Grid<Product> gridProduct = new Grid<>(Product.class);
 
     public UserView() {
-        logged.setText("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
+        logged.setText("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
         filter.setPlaceholder("Filter by product name");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -61,6 +61,7 @@ public class UserView extends VerticalLayout {
         });
 
         gridProduct.asSingleSelect().addValueChangeListener(event -> {
+
             session.setProduct(gridProduct.asSingleSelect().getValue());
             getUI().ifPresent(ui -> ui.navigate("product_view"));
         });

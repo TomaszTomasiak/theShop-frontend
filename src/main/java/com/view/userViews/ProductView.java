@@ -1,12 +1,8 @@
 package com.view.userViews;
 
-import com.domain.Cart;
-import com.domain.Item;
-import com.domain.Product;
-import com.service.CartService;
+import com.domain.*;
 import com.service.CurrencyService;
 import com.service.ItemService;
-import com.service.OrderService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -33,22 +29,15 @@ public class ProductView extends VerticalLayout {
     @Autowired
     private ItemService itemService;
 
-    @Autowired
-    private CartService cartService;
-
-    @Autowired
-    private OrderService orderService;
-
-
     private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
-    private Text logged = new Text("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
+    private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
     private Image image = new Image("http://www.plslights.com/index.php/home/vendor_profile/get_slider/", "src/main/resources/medium-default-product.jpg");
     private H2 name = new H2(session.getProduct().getName());
     private Text desc = new Text(session.getProduct().getDescription());
     private H1 price = new H1("Piece price: ");
     private Text pricePLN = new Text("PLN " + session.getProduct().getPrice());
-    private Text priceEUR = new Text("EUR " + currencyService.valueEUR(session.getProduct().getPrice()) );
+    private Text priceEUR = new Text("EUR " + currencyService.valueEUR(session.getProduct().getPrice()));
     private Text priceGBP = new Text("GBP " + currencyService.valueGBP(session.getProduct().getPrice()));
     private Text priceUSD = new Text("USD " + currencyService.valueUSD(session.getProduct().getPrice()));
     private Text group = new Text(session.getProduct().getName());
@@ -59,8 +48,6 @@ public class ProductView extends VerticalLayout {
 
     private Binder<Product> bidnderProduct = new Binder<>(Product.class);
     private Binder<Item> bidnderItem = new Binder<>(Item.class);
-
-    private Product product = session.getProduct();
 
     public ProductView() {
 
@@ -78,7 +65,7 @@ public class ProductView extends VerticalLayout {
         logout.addClickListener(event -> {
             session.cleanAll();
             getUI().ifPresent(ui -> ui.navigate(""));
-            });
+        });
 
 
         VerticalLayout productInfo =
@@ -93,31 +80,37 @@ public class ProductView extends VerticalLayout {
         add(buyLeyout);
 
         addToCart.addClickListener(event -> {
-            newItem(qty.getValue());
-
-            getUI().ifPresent(ui -> ui.navigate("cart_view"));
+            if (qty.getValue() > 0) {
+                newItem(qty.getValue());
+                getUI().ifPresent(ui -> ui.navigate("cart_view"));
+            }
         });
 
         buyNow.addClickListener(event -> {
-            newItem(qty.getValue());
-            getUI().ifPresent(ui -> ui.navigate("order_view"));
+            if (qty.getValue() > 0) {
+                newItem(qty.getValue());
+                getUI().ifPresent(ui -> ui.navigate("order_view"));
+            }
         });
     }
 
-    public Item newItem (double qty) {
-
+    public Item newItem(double qty) {
         Item item = new Item();
-        //item.setProductId(session.getProduct().getId());
+        item.setProductId(session.getProduct().getId());
         int intQty = (int) qty;
         item.setQuantity(intQty);
-        item.setProductId(session.getProduct().getId());
         itemService.saveItem(item);
         session.setItem(item);
 
-        if(session.getCart() == null) {
+        if (session.getCart() == null) {
             Cart cart = new Cart();
             cart.getItems().add(item);
+
+        } else {
+            session.getCart().getItems().add(session.getItem());
         }
+        ProductOnCart productOnCart = new ProductOnCart(session.getProduct(), intQty);
+        session.getListOfProductsOnCart().add(productOnCart);
         return item;
     }
 }

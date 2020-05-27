@@ -1,18 +1,20 @@
 package com.view;
 
-import com.domain.UserDto;
+import com.domain.User;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("ALL")
 @Route("")
 public class WelcomeView extends VerticalLayout {
 
@@ -52,7 +54,6 @@ public class WelcomeView extends VerticalLayout {
         });
 
         loginButton.addClickListener(event -> {
-
             if (validateUser()){
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
             }
@@ -62,14 +63,11 @@ public class WelcomeView extends VerticalLayout {
     }
 
         public boolean validateUser() {
-
-        UserDto userDto = userService.fetchUserByMail(mail.getValue());
-
-        if (userDto != null && (password.getValue()).equals(userDto.getPassword())){
-            session.setCurrentUserDto(userDto);
+        User user = userService.fetchUserByMail(mail.getValue());
+        if (user != null && (password.getValue()).equals(user.getPassword())){
+            session.setCurrentUser(user);
             return true;
         } else {
-            add(new Text("Incorrect password or mail adress"));
             return false;
         }
     }

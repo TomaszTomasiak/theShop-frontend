@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("ALL")
 @Route("admin_main")
 public class MainAdminView extends VerticalLayout {
 
@@ -34,7 +35,7 @@ public class MainAdminView extends VerticalLayout {
 
     //private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
-    private Text logged = new Text("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
+    private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
 
     public MainAdminView() {
         setAlignItems(Alignment.CENTER);

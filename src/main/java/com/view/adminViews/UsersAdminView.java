@@ -1,6 +1,6 @@
 package com.view.adminViews;
 
-import com.domain.UserDto;
+import com.domain.User;
 import com.form.UserForm;
 import com.service.UserService;
 import com.session.Session;
@@ -14,27 +14,32 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Route("users_admin")
 public class UsersAdminView extends VerticalLayout {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    Session session;
+    private Session session;
 
     private Button logout = new Button("Log out");
     private Text logged = new Text("");
-    private Grid<UserDto> grid = new Grid<>(UserDto.class);
+    private Grid<User> grid = new Grid<>(User.class);
     private TextField lastNameFilter = new TextField();
     private TextField mailFilter = new TextField();
     private TextField phoneFilter = new TextField();
     private TextField firstNameFilter = new TextField();
     private UserForm form = new UserForm(this);
     private Button addNewUser = new Button("Add new user");
+    private List<User> list;
 
     public UsersAdminView() {
-        //logged.setText("Logged: " + session.getCurrentUserDto().getFirstName() + " " + session.getCurrentUserDto().getLastName());
+
+        //logged.setText("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
         lastNameFilter.setPlaceholder("Filter by last name");
         lastNameFilter.setClearButtonVisible(true);
         lastNameFilter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -55,11 +60,11 @@ public class UsersAdminView extends VerticalLayout {
         phoneFilter.setValueChangeMode(ValueChangeMode.EAGER);
         phoneFilter.addValueChangeListener(e -> updatePhone());
 
-        grid.setColumns("id", "firstName", "lastName", "mailAdress", "phoneNumber");
+        grid.setColumns("id", "firstName", "lastName", "mailAdress", "phoneNumber", "password");
 
         addNewUser.addClickListener(e -> {
             grid.asSingleSelect().clear();
-            form.setUser(new UserDto());
+            form.setUser(new User());
         });
 
         HorizontalLayout toolbar = new HorizontalLayout(lastNameFilter, firstNameFilter, mailFilter, phoneFilter, addNewUser, logout, logged);
@@ -77,7 +82,8 @@ public class UsersAdminView extends VerticalLayout {
     }
 
     public void refresh() {
-        grid.setItems(userService.getUserDtos());
+        list = new ArrayList<>(userService.getUsers());
+        grid.setItems(list);
     }
 
     public void updateLastName() {
