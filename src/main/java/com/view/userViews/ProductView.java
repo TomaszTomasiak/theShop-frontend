@@ -1,8 +1,10 @@
 package com.view.userViews;
 
 import com.domain.*;
+import com.service.CartService;
 import com.service.CurrencyService;
 import com.service.ItemService;
+import com.service.ProductService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -17,17 +19,21 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Route("product_view")
 public class ProductView extends VerticalLayout {
-
-    @Autowired
-    private Session session;
 
     @Autowired
     private CurrencyService currencyService;
 
     @Autowired
-    private ItemService itemService;
+    private CartService cartService;
+
+    @Autowired
+    private ProductService productService;
+
+    private Session session = Session.getInstance();
 
     private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
@@ -89,28 +95,48 @@ public class ProductView extends VerticalLayout {
         buyNow.addClickListener(event -> {
             if (qty.getValue() > 0) {
                 newItem(qty.getValue());
+                saveCart();
                 getUI().ifPresent(ui -> ui.navigate("order_view"));
             }
         });
     }
 
     public Item newItem(double qty) {
+
         Item item = new Item();
         item.setProductId(session.getProduct().getId());
         int intQty = (int) qty;
         item.setQuantity(intQty);
-        itemService.saveItem(item);
+        //itemService.saveItem(item);
         session.setItem(item);
+        addItemToCart(session.getItem());
+        addToList(item);
 
-        if (session.getCart() == null) {
-            Cart cart = new Cart();
-            cart.getItems().add(item);
+        return item;
+    }
+
+    public void addItemToCart(Item item) {
+
+        if (session.getCart().getItems().size() > 0) {
+            session.getCart().getItems().add(item);
 
         } else {
-            session.getCart().getItems().add(session.getItem());
+            Cart cart = new Cart();
+            cart.setUserId(session.getCurrentUser().getId());
+            cart.getItems().add(item);
+            session.setCart(cart);
         }
-        ProductOnCart productOnCart = new ProductOnCart(session.getProduct(), intQty);
+    }
+
+    public void saveCart() {
+        cartService.saveCart(session.getCart());
+    }
+
+    public ProductOnCart addToList(Item item) {
+        ProductOnCart productOnCart = new ProductOnCart();
+        productOnCart.setProduct(productService.getProduct(item.getProductId()));
+        productOnCart.setQty(item.getQuantity());
         session.getListOfProductsOnCart().add(productOnCart);
-        return item;
+    return productOnCart;
     }
 }

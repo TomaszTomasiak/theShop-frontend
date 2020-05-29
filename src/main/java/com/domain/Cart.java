@@ -19,5 +19,5 @@ public class Cart {
 //    private Long orderId;
 
     @JsonProperty
-    private Long userId;
+    private Integer userId;
 }

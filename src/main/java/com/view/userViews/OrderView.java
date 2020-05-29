@@ -9,20 +9,20 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("cart_view")
-public class CartView extends VerticalLayout {
+@Route("order_view")
+public class OrderView extends VerticalLayout {
 
     private Session session = Session.getInstance();
 
     private Button back = new Button("Return to shopping");
     private Button logout = new Button("Log out");
+    private Button confirmeOrder = new Button("Confirm order");
     private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
     private Grid<ProductOnCart> grid = new Grid<>(ProductOnCart.class);
-    private Text totalValue = new Text("");
 
-    public CartView() {
+
+    public OrderView() {
         setAlignItems(Alignment.CENTER);
         HorizontalLayout header = new HorizontalLayout(back, logout, logged);
         header.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -41,9 +41,6 @@ public class CartView extends VerticalLayout {
 
         grid.setColumns("product", "price", "quantity", "value");
         add(grid);
-        totalValue.setText("Total value of products on list is: " + session.getCart());
-        add(totalValue);
-
         refresh();
     }
 

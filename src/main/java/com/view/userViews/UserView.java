@@ -61,7 +61,6 @@ public class UserView extends VerticalLayout {
         });
 
         gridProduct.asSingleSelect().addValueChangeListener(event -> {
-
             session.setProduct(gridProduct.asSingleSelect().getValue());
             getUI().ifPresent(ui -> ui.navigate("product_view"));
         });
