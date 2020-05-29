@@ -18,14 +18,12 @@ public class CreateUserView extends VerticalLayout {
     private Text instruction = new Text("Please fill all bellow fields");
 
     public CreateUserView() {
-
-        setAlignItems(Alignment.CENTER);
         add(space);
         add(welcome);
         add(instruction);
-
         add(form);
         form.setSizeFull();
+        setAlignItems(Alignment.CENTER);
         setSizeFull();
         refresh();
     }
@@ -34,7 +32,4 @@ public class CreateUserView extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
     }
 
-    public void info(Text text) {
-        add(text);
-    }
 }

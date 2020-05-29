@@ -37,7 +37,7 @@ public class OrderService {
         session.setOrder(newOrder);
         emailService.send(new Mail(
                 session.getCurrentUser().getMailAdress(),
-                "Order number: "  + session.getOrder().getId(),
+                "Order confirmation",
                 "You just placed the order number: " + session.getOrder().getId()
         ));
     }

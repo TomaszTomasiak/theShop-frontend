@@ -1,6 +1,5 @@
 package com.form;
 
-import com.config.JsonBuilder;
 import com.domain.User;
 import com.service.UserService;
 import com.session.Session;
@@ -8,21 +7,18 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.binder.Binder;
 import com.view.userViews.CreateUserView;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class CreateUserForm extends FormLayout {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private Session session;
+    private UserService userService = UserService.getInstance();
+    private Session session = Session.getInstance();
 
     private IntegerField id = new IntegerField("User ID");
     private TextField firstName = new TextField("First name");
@@ -35,7 +31,6 @@ public class CreateUserForm extends FormLayout {
     private Button cancel = new Button("Cancel");
     private Binder<User> binder = new Binder<>(User.class);
     private Text notFit = new Text("Password and repeated password are not the same");
-    private User createdUser;
 
     private CreateUserView createUserView;
 
@@ -55,9 +50,8 @@ public class CreateUserForm extends FormLayout {
         VerticalLayout fields = new VerticalLayout(id, firstName, lastName, mailAdress, phoneNumber, password, buttons);
         add(fields);
         add(userNotCreated);
-        id.setValue(1);
+//        id.setValue(0);
         id.setVisible(false);
-        //binder.forField(id).withConverter(Integer::longValue, Long::intValue).bind(User::getId, User::setId);
         binder.bindInstanceFields(this);
         firstName.focus();
         save.addClickListener(event -> {
@@ -65,7 +59,7 @@ public class CreateUserForm extends FormLayout {
             if (isUserCreated()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
             } else {
-                this.createUserView.add(new Text("Ups. Something goes wrong. Try again later"));
+                this.createUserView.add(new H2("Ups. Something goes wrong. Try again later"));
             }
         });
         cancel.addClickListener(event -> cancel());
@@ -75,15 +69,11 @@ public class CreateUserForm extends FormLayout {
         User newUser = binder.getBean();
 //        User newUser =
 //                new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
-
         userService.createNewUser(newUser);
-
     }
 
     private boolean isUserCreated() {
-        createdUser = userService.fetchUserByMail(mailAdress.getValue());
-        if (createdUser.getId() != null) {
-            session.setCurrentUser(createdUser);
+        if (session.getCurrentUser().getId() != null) {
             return true;
         } else {
             return false;

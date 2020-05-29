@@ -36,7 +36,7 @@ public class MailCreatorService {
         context.setVariable("company_mail", companyConfig.getCompanyMail());
         context.setVariable("company_website", companyConfig.getCompanyWebsite());
         context.setVariable("message", message);
-        context.setVariable("button", "Sign in");
+        context.setVariable("button", "Payment");
         context.setVariable("goodbay_message", goodbay());
         context.setVariable("application_functionality", list);
         context.setVariable("is_list", true);

@@ -14,7 +14,8 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SuppressWarnings("ALL")
+import java.util.List;
+
 @Route("")
 public class WelcomeView extends VerticalLayout {
 
@@ -34,8 +35,6 @@ public class WelcomeView extends VerticalLayout {
 
     public WelcomeView() {
 
-
-
         setAlignItems(Alignment.CENTER);
         add(space);
         add(welcome);
@@ -49,12 +48,11 @@ public class WelcomeView extends VerticalLayout {
         createNewAccount.setWidth("200px");
 
         createNewAccount.addClickListener(event -> {
-
             getUI().ifPresent(ui -> ui.navigate("new_user"));
         });
 
         loginButton.addClickListener(event -> {
-            if (validateUser()){
+            if (validateUser()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
             }
         });
@@ -62,9 +60,9 @@ public class WelcomeView extends VerticalLayout {
         add(mail, password, loginButton, createNewAccount);
     }
 
-        public boolean validateUser() {
+    public boolean validateUser() {
         User user = userService.fetchUserByMail(mail.getValue());
-        if (user != null && (password.getValue()).equals(user.getPassword())){
+        if (user != null && (password.getValue()).equals(user.getPassword())) {
             session.setCurrentUser(user);
             return true;
         } else {

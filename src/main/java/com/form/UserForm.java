@@ -50,7 +50,8 @@ public class UserForm extends FormLayout {
 
     private void delete() {
         User user = binder.getBean();
-        userService.delete(user);
+        long id = user.getId();
+        userService.delete(id);
         setUser(null);
         usersAdminView.refresh();
     }

@@ -21,10 +21,8 @@ import static java.util.Optional.ofNullable;
 public class UserClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserClient.class);
-    private JsonBuilder<User> jsonBuilder = new JsonBuilder<>();
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
     @Autowired
     private AppConfig appConfig;
@@ -66,13 +64,14 @@ public class UserClient {
         }
     }
 
-    public void saveUser(User user) {
+    public User saveUser(User user) {
         try {
-           restTemplate.postForObject(getUrl(), user, void.class);
+            User created = restTemplate.postForObject(getUrl(), user, User.class);
+           return created;
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }
-
+        return null;
     }
 
     public void updateUser(Long userId, User user) {

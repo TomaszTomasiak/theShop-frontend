@@ -1,61 +1,102 @@
 package com.service;
 
-import com.client.UserClient;
+import com.config.AppConfig;
+import com.config.JsonBuilder;
 import com.domain.User;
 import com.session.Session;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private Session session;
+    private final RestTemplate restTemplate = new RestTemplate();
+    //private final JsonBuilder<User> jsonBuilder = new JsonBuilder<>();
+    private final AppConfig appConfig = AppConfig.getInstance();
 
-    @Autowired
-    private UserClient userClient;
 
-    public boolean isUserLogged = false;
 
+    private static UserService userService;
+    //private final Session session = Session.getInstance();
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     public List<User> users;
 
+    private UserService() {
+        this.users = new ArrayList<>();
+    }
+
+    public static UserService getInstance() {
+        if (userService == null) {
+            userService = new UserService();
+        }
+        return userService;
+    }
+
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "users")
+                .build().encode().toUri();
+        return url;
+    }
+
     public List<User> getUsers() {
-        users = userClient.getAllUsers();
-        return users;
+        URI url = getUrl();
+        try {
+            User[] usersResponse = restTemplate.getForObject(url, User[].class);
+            return Arrays.asList(ofNullable(usersResponse).orElse(new User[0]));
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
 
     public User fetchUserByMail(String mail) {
-        List<User> usersWithIndicatedMail = userClient.getAllUsers().stream()
+        List<User> usersWithIndicatedMail = getUsers().stream()
                 .filter(user -> user.getMailAdress().equals(mail.toLowerCase()))
                 .collect(Collectors.toList());
         return usersWithIndicatedMail.get(0);
     }
 
+
     public void createNewUser(User user) {
-          userClient.saveUser(user);
-    }
-
-    public void delete(User user) {
-        userClient.deleteUser(user.getId());
-    }
-
-    public long count() {
-        return users.size();
-    }
-
-    public String userLogged(User user) {
-        if (isUserLogged) {
-            return "Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName();
+        URI url = getUrl();
+        try {
+            restTemplate.postForObject(url, user, User.class);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
         }
-        return "You must log in to start shopping";
+
+    }
+
+    public void delete(Long userId) {
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "users/" + userId)
+                .build().encode().toUri();
+        try {
+            restTemplate.delete(url);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     public User getUser(Long userId) {
-        return userClient.getUser(userId);
+        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "users/" + userId)
+                .build().encode().toUri();
+        try {
+            return restTemplate.getForObject(url, User.class);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new User();
+        }
     }
 
     public Set<User> findByLastName(String lastName) {

@@ -7,23 +7,40 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 @Getter
 @Setter
-public class Session implements Serializable {
+@Component
+public class Session implements Serializable{
 
-    private User currentUser = new User();
-    private Order order = new Order();
-    private Product product = new Product();
-    private Item item = new Item();
-    private Cart cart = new Cart();
-    private ProductGroup productGroup = new ProductGroup();
-    private List<ProductOnCart> listOfProductsOnCart = new ArrayList<>();
+    private static Session session;
 
+    private User currentUser;
+    private Order order;
+    private Product product;
+    private Item item;
+    private Cart cart;
+    private ProductGroup productGroup;
+    private List<ProductOnCart> listOfProductsOnCart;
+
+    private Session() {
+        currentUser = new User();
+        order = new Order();
+        product = new Product();
+        item = new Item();
+        cart = new Cart();
+        productGroup = new ProductGroup();
+       listOfProductsOnCart = new ArrayList<>();
+    }
+
+    public static Session getInstance() {
+        if(session == null) {
+            session = new Session();
+        }
+        return session;
+    }
     public void cleanAll() {
         currentUser = new User();
         cart = new Cart();
@@ -35,11 +52,5 @@ public class Session implements Serializable {
         for (ProductOnCart tmp:listOfProductsOnCart) {
             listOfProductsOnCart.remove(tmp);
         }
-    }
-
-    private BigDecimal orderTotalValue() {
-        return BigDecimal.valueOf(getListOfProductsOnCart().stream()
-                .mapToDouble(i -> i.getValue())
-                .sum()).setScale(2);
     }
 }
