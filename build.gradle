@@ -26,6 +26,8 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-mail:2.2.4.RELEASE')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.1'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5'
 }
 
 dependencyManagement {

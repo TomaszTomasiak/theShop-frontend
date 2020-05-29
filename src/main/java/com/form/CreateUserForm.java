@@ -15,6 +15,8 @@ import com.vaadin.flow.component.textfield.*;
 import com.vaadin.flow.data.binder.Binder;
 import com.view.userViews.CreateUserView;
 
+import java.io.IOException;
+
 public class CreateUserForm extends FormLayout {
 
     private UserService userService = UserService.getInstance();
@@ -55,7 +57,11 @@ public class CreateUserForm extends FormLayout {
         binder.bindInstanceFields(this);
         firstName.focus();
         save.addClickListener(event -> {
-            saveUser();
+            try {
+                saveUser();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (isUserCreated()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
             } else {
@@ -65,7 +71,7 @@ public class CreateUserForm extends FormLayout {
         cancel.addClickListener(event -> cancel());
     }
 
-    private void saveUser() {
+    private void saveUser() throws IOException {
         User newUser = binder.getBean();
 //        User newUser =
 //                new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());

@@ -1,5 +1,9 @@
 package com.config;
 
+import org.springframework.boot.autoconfigure.elasticsearch.jest.HttpClientConfigBuilderCustomizer;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component

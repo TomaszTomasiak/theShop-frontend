@@ -3,18 +3,29 @@ package com.service;
 import com.config.AppConfig;
 import com.config.JsonBuilder;
 import com.domain.User;
+import com.google.gson.Gson;
 import com.session.Session;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 import static java.util.Optional.ofNullable;
 
@@ -24,8 +35,6 @@ public class UserService {
     private final RestTemplate restTemplate = new RestTemplate();
     //private final JsonBuilder<User> jsonBuilder = new JsonBuilder<>();
     private final AppConfig appConfig = AppConfig.getInstance();
-
-
 
     private static UserService userService;
     //private final Session session = Session.getInstance();
@@ -68,8 +77,19 @@ public class UserService {
     }
 
 
-    public void createNewUser(User user) {
+    public void createNewUser(User user) throws IOException {
         URI url = getUrl();
+//        HttpClient httpClient = HttpClientBuilder.create().build();
+//        String       postUrl       = "www.site.com";// put in your url
+//        Gson gson = new Gson();
+//        HttpClient httpClient = HttpClientBuilder.create().build();
+//        HttpPost post = new HttpPost(url);
+//        StringEntity postingString = new StringEntity(gson.toJson(user));//gson.tojson() converts your pojo to json
+//        post.setEntity(postingString);
+//        post.setHeader("Content-type", "application/json");
+//        httpClient.execute(post);
+//        HttpResponse response = httpClient.execute(post);
+
         try {
             restTemplate.postForObject(url, user, User.class);
         } catch (RestClientException e) {

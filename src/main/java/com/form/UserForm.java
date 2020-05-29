@@ -12,6 +12,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.view.adminViews.UsersAdminView;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 public class UserForm extends FormLayout {
 
     @Autowired
@@ -37,11 +39,17 @@ public class UserForm extends FormLayout {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         add(id, firstName, lastName, mailAdress, phoneNumber, password, buttons);
         binder.bindInstanceFields(this);
-        save.addClickListener(event -> save());
+        save.addClickListener(event -> {
+            try {
+                save();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         delete.addClickListener(event -> delete());
     }
 
-    private void save() {
+    private void save() throws IOException {
         User user = binder.getBean();
         userService.createNewUser(user);
         setUser(null);
