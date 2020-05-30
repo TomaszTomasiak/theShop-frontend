@@ -14,7 +14,6 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 
 @Route("")
 public class WelcomeView extends VerticalLayout {
@@ -54,6 +53,8 @@ public class WelcomeView extends VerticalLayout {
         loginButton.addClickListener(event -> {
             if (validateUser()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
+            } else {
+                add(new Notification("Email adress or password is incorrect"));
             }
         });
 

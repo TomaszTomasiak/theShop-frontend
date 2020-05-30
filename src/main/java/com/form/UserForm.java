@@ -42,6 +42,7 @@ public class UserForm extends FormLayout {
         save.addClickListener(event -> {
             try {
                 save();
+                getUI().ifPresent(ui -> ui.navigate("useer_view"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

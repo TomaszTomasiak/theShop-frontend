@@ -17,7 +17,7 @@ public class OrderView extends VerticalLayout {
 
     private Button back = new Button("Return to shopping");
     private Button logout = new Button("Log out");
-    private Button confirmeOrder = new Button("Confirm order");
+    private Button pay = new Button("Pay");
     private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
     private Grid<ProductOnCart> grid = new Grid<>(ProductOnCart.class);
 
@@ -41,6 +41,9 @@ public class OrderView extends VerticalLayout {
 
         grid.setColumns("product", "price", "quantity", "value");
         add(grid);
+
+        pay.setWidth("200");
+        add(pay);
         refresh();
     }
 

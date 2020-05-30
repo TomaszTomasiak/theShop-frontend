@@ -14,7 +14,6 @@ public class AppConfig {
    private static final String backendEndpoint = "http://localhost:4600/api/v1/";
 
    private AppConfig() {
-
    }
 
    public static AppConfig getInstance() {

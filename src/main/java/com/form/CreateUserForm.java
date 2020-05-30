@@ -7,12 +7,12 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
-import com.vaadin.flow.data.binder.Binder;
 import com.view.userViews.CreateUserView;
 
 import java.io.IOException;
@@ -27,11 +27,11 @@ public class CreateUserForm extends FormLayout {
     private TextField lastName = new TextField("Last name");
     private EmailField mailAdress = new EmailField("Mail adress");
     private TextField phoneNumber = new TextField("Phone number");
-    private Text userNotCreated  = new Text("");
+    private Text userNotCreated = new Text("");
     private PasswordField password = new PasswordField("Password");
     private Button save = new Button("Create account");
     private Button cancel = new Button("Cancel");
-    private Binder<User> binder = new Binder<>(User.class);
+    //private Binder<User> binder = new Binder<>(User.class);
     private Text notFit = new Text("Password and repeated password are not the same");
 
     private CreateUserView createUserView;
@@ -49,12 +49,12 @@ public class CreateUserForm extends FormLayout {
         cancel.setWidth("170px");
         HorizontalLayout buttons = new HorizontalLayout(save, cancel);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        VerticalLayout fields = new VerticalLayout(id, firstName, lastName, mailAdress, phoneNumber, password, buttons);
+        VerticalLayout fields = new VerticalLayout(firstName, lastName, mailAdress, phoneNumber, password, buttons);
         add(fields);
         add(userNotCreated);
 //        id.setValue(0);
-        id.setVisible(false);
-        binder.bindInstanceFields(this);
+//        id.setVisible(false);
+        //binder.bindInstanceFields(this);
         firstName.focus();
         save.addClickListener(event -> {
             try {
@@ -65,17 +65,21 @@ public class CreateUserForm extends FormLayout {
             if (isUserCreated()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
             } else {
-                this.createUserView.add(new H2("Ups. Something goes wrong. Try again later"));
+                this.createUserView.add(new H1("Ups. Something goes wrong. Try again later"));
             }
         });
         cancel.addClickListener(event -> cancel());
     }
 
     private void saveUser() throws IOException {
-        User newUser = binder.getBean();
-//        User newUser =
-//                new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
-        userService.createNewUser(newUser);
+//        User newUser = binder.getBean();
+        User newUser =
+                new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
+        if (!isThereUserWithMail(newUser)) {
+            userService.createNewUser(newUser);
+            session.setCurrentUser(userService.fetchUserByMail(newUser.getMailAdress()));
+        }
+        createUserView.add(new Notification("Account with this email adress has already exist.\n"));
     }
 
     private boolean isUserCreated() {
@@ -85,8 +89,17 @@ public class CreateUserForm extends FormLayout {
             return false;
         }
     }
+
     private void cancel() {
         getUI().ifPresent(ui -> ui.navigate(""));
+    }
+
+    public boolean isThereUserWithMail(User user) {
+
+        if (userService.fetchUserByMail(user.getMailAdress()).getMailAdress() != null) {
+            return true;
+        }
+        return false;
     }
 
 }

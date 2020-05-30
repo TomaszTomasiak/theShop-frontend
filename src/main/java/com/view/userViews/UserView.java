@@ -16,17 +16,18 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route("user_view")
+@Route(value = "user_view")
 public class UserView extends VerticalLayout {
-
-    @Autowired
-    private Session session;
 
     @Autowired
     private ProductGroupService productGroupService;
 
     @Autowired
     private ProductService productService;
+
+    private Session session = Session.getInstance();
+
+
 
     private TextField filter = new TextField();
     private Button logout = new Button("Log out");
@@ -41,7 +42,7 @@ public class UserView extends VerticalLayout {
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> update());
-        gridGroup.setColumns("Groups of products");
+        gridGroup.setColumns("name");
         gridProduct.setColumns("name");
 
         HorizontalLayout header = new HorizontalLayout(filter, showProducts, logout, logged);

@@ -6,20 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ItemService {
 
-
     @Autowired
     private ItemClient itemClient;
 
-    private List<Item> products;
-
     public List<Item> getItems() {
-        products = itemClient.getAllItems();
-        return products;
+        return itemClient.getAllItems();
     }
 
     public Item getItem(Long id) {
