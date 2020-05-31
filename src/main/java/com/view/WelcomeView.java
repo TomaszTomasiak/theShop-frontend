@@ -1,5 +1,6 @@
 package com.view;
 
+import com.config.AdminConfig;
 import com.domain.User;
 import com.service.UserService;
 import com.session.Session;
@@ -30,7 +31,9 @@ public class WelcomeView extends VerticalLayout {
     private UserService userService;
 
     @Autowired
-    private Session session;
+    private AdminConfig adminConfig;
+
+    private Session session = Session.getInstance();
 
     public WelcomeView() {
 
@@ -51,11 +54,13 @@ public class WelcomeView extends VerticalLayout {
         });
 
         loginButton.addClickListener(event -> {
+            if (isAdmin()) {
+                getUI().ifPresent(ui -> ui.navigate("admin_main"));
+            }
             if (validateUser()) {
                 getUI().ifPresent(ui -> ui.navigate("user_view"));
-            } else {
-                add(new Notification("Email adress or password is incorrect"));
             }
+            add(new Notification("Email adress or password is incorrect"));
         });
 
         add(mail, password, loginButton, createNewAccount);
@@ -70,4 +75,15 @@ public class WelcomeView extends VerticalLayout {
             return false;
         }
     }
+
+    public boolean isAdmin() {
+        if (mail.getValue().equals(adminConfig.getAdminMail())) {
+            User admin = new User();
+            admin.setFirstName("Admin");
+            session.setCurrentUser(admin);
+            return true;
+        }
+        return false;
+    }
+
 }

@@ -11,23 +11,22 @@ public class CurrencyService {
    @Autowired
    private RestTemplate restTemplate;
 
-   @Autowired
-   private AppConfig appConfig;
+   private static final String url = AppConfig.getCurrency();
 
     public Double getEUR() {
-        String urlEur = appConfig.getBackendEndpoint() + "/currency/eur";
+        String urlEur = url + "/eur";
         Double EUR = (Double) restTemplate.getForObject(urlEur, Object.class);
         return EUR;
     }
 
     public Double getUSD() {
-        String urlUsd = appConfig.getBackendEndpoint() + "/currency/usd";
+        String urlUsd = url + "/usd";
         Double USD = (Double) restTemplate.getForObject(urlUsd, Object.class);
         return USD;
     }
 
     public Double getGBP() {
-        String urlGbp = appConfig.getBackendEndpoint() + "/currency/gbp";
+        String urlGbp = url + "/gbp";
         Double GBP = (Double) restTemplate.getForObject(urlGbp, Object.class);
         return GBP;
     }

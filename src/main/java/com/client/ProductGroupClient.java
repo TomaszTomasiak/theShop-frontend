@@ -1,6 +1,5 @@
 package com.client;
 
-
 import com.config.AppConfig;
 import com.domain.ProductGroup;
 import org.slf4j.Logger;
@@ -16,23 +15,23 @@ import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
-
 @Component
 public class ProductGroupClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductGroupClient.class);
-
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private AppConfig appConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductGroupClient.class);
+    private static final String endpoint = AppConfig.getGroups();
+
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
+                .build().encode().toUri();
+        return url;
+    }
 
     public List<ProductGroup> getAllGroups() {
-
-        URI url = getUrl();
         try {
-            ProductGroup[] usersResponse = restTemplate.getForObject(url, ProductGroup[].class);
+            ProductGroup[] usersResponse = restTemplate.getForObject(getUrl(), ProductGroup[].class);
             return Arrays.asList(ofNullable(usersResponse).orElse(new ProductGroup[0]));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
@@ -40,15 +39,8 @@ public class ProductGroupClient {
         }
     }
 
-    private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/groups")
-                .build().encode().toUri();
-
-        return url;
-    }
-
     public ProductGroup getGroup(Long groupId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/groups/" + groupId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + groupId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, ProductGroup.class);
@@ -59,7 +51,7 @@ public class ProductGroupClient {
     }
 
     public void deleteGroup(Long groupId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/groups/" + groupId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + groupId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -69,12 +61,11 @@ public class ProductGroupClient {
     }
 
     public ProductGroup createNewGroup(ProductGroup productGroup) {
-        URI url = getUrl();
-        return restTemplate.postForObject(url, productGroup, ProductGroup.class);
+        return restTemplate.postForObject(getUrl(), productGroup, ProductGroup.class);
     }
 
     public void updateGroup(Long groupId, ProductGroup productGroup) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/groups/" + groupId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + groupId)
                 .build().encode().toUri();
         try {
         restTemplate.put(url, productGroup);

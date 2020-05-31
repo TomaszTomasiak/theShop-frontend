@@ -17,20 +17,21 @@ import static java.util.Optional.ofNullable;
 
 @Component
 public class OrderClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderClient.class);
-
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private AppConfig appConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderClient.class);
+    private static final String endpoint = AppConfig.getOrders();
+
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
+                .build().encode().toUri();
+        return url;
+    }
 
     public List<Order> getAllOrders() {
-
-        URI url = getUrl();
         try {
-            Order[] usersResponse = restTemplate.getForObject(url, Order[].class);
+            Order[] usersResponse = restTemplate.getForObject(getUrl(), Order[].class);
             return Arrays.asList(ofNullable(usersResponse).orElse(new Order[0]));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
@@ -38,14 +39,8 @@ public class OrderClient {
         }
     }
 
-    private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/orders")
-                .build().encode().toUri();
-        return url;
-    }
-
     public Order getOrder(Long orderId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/orders/" + orderId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + orderId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, Order.class);
@@ -56,7 +51,7 @@ public class OrderClient {
     }
 
     public void deleteOrder(Long orderId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/orders/" + orderId)
+        URI url = UriComponentsBuilder.fromHttpUrl(endpoint + "/" + orderId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -71,7 +66,7 @@ public class OrderClient {
     }
 
     public void updateOrder(Long orderId, Order order) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/orders/" + orderId)
+        URI url = UriComponentsBuilder.fromHttpUrl(endpoint + "/" + orderId)
                 .build().encode().toUri();
         try {
             restTemplate.put(url, order);

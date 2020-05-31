@@ -24,8 +24,13 @@ public class UserClient {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    @Autowired
-    private AppConfig appConfig;
+    private static final String endpoint = AppConfig.getUsers();
+
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
+                .build().encode().toUri();
+        return url;
+    }
 
     public List<User> getAllUsers() {
         try {
@@ -37,14 +42,8 @@ public class UserClient {
         }
     }
 
-    private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users")
-                .build().encode().toUri();
-        return url;
-    }
-
     public User getUser(Long userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + userId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, User.class);
@@ -55,7 +54,7 @@ public class UserClient {
     }
 
     public void deleteUser(Integer userId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + userId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -75,7 +74,7 @@ public class UserClient {
     }
 
     public void updateUser(Long userId, User user) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/users/" + userId)
+        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + userId)
                 .build().encode().toUri();
         try {
         restTemplate.put(url, user);

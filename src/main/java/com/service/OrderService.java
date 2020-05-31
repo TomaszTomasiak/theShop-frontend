@@ -7,6 +7,7 @@ import com.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,14 +19,24 @@ public class OrderService {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private Session session;
+    private final Session session = Session.getInstance();
+    private static OrderService orderService;
 
-    private List<Order> orders;
+    public List<Order> orders;
+
+    public static OrderService getInstance() {
+        if (orderService == null) {
+            orderService = new OrderService();
+        }
+        return orderService;
+    }
+
+    public OrderService() {
+        this.orders = new ArrayList<>(orderClient.getAllOrders());
+    }
 
     public List<Order> getOrders() {
-        orders = orderClient.getAllOrders();
-        return orders;
+        return orderClient.getAllOrders();
     }
 
     public Order getOrder(Long orderId) {
@@ -49,5 +60,15 @@ public class OrderService {
     public void deleteOrder(Order order) {
         orderClient.deleteOrder(order.getId());
     }
+
+//    public void findOrdersWithTotalValueBeetween(Double from, Double to) {
+//        orderClient.getAllOrders().stream()
+//                .filter(order -> {
+//                    if(from != null ){
+//
+//                    }
+//                    order.getTotalValue() >
+//                } )
+//    }
 
 }

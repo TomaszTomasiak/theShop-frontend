@@ -27,8 +27,6 @@ public class UserView extends VerticalLayout {
 
     private Session session = Session.getInstance();
 
-
-
     private TextField filter = new TextField();
     private Button logout = new Button("Log out");
     private Text logged = new Text("");
@@ -37,7 +35,7 @@ public class UserView extends VerticalLayout {
     private Grid<Product> gridProduct = new Grid<>(Product.class);
 
     public UserView() {
-        logged.setText("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
+        logged.setText(nameOfLoggedUser());
         filter.setPlaceholder("Filter by product name");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -83,9 +81,11 @@ public class UserView extends VerticalLayout {
     }
 
     public void refresh() {
-        gridGroup.setItems(productGroupService.getGroups());
+        gridGroup.setItems(productGroupService.getProductGroupList());
         gridProduct.setItems(productService.getAllProducts());
     }
 
-
+    public String nameOfLoggedUser () {
+        return "Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName();
+    }
 }

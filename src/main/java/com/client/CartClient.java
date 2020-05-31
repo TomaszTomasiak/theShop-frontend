@@ -1,6 +1,5 @@
 package com.client;
 
-
 import com.config.AppConfig;
 import com.domain.Cart;
 import org.slf4j.Logger;
@@ -16,20 +15,21 @@ import java.util.*;
 
 import static java.util.Optional.ofNullable;
 
-
 @Component
 public class CartClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartClient.class);
+    private static final String ENDPOINT = AppConfig.getCarts();
 
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private AppConfig appConfig;
-
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
+                .build().encode().toUri();
+        return url;
+    }
     public List<Cart> getAllCarts() {
-
         URI url = getUrl();
         try {
             Cart[] usersResponse = restTemplate.getForObject(url, Cart[].class);
@@ -40,14 +40,8 @@ public class CartClient {
         }
     }
 
-    private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts")
-                .build().encode().toUri();
-        return url;
-    }
-
     public Cart getCart(Long cartId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + cartId)
                 .build().encode().toUri();
         try {
             return restTemplate.getForObject(url, Cart.class);
@@ -58,7 +52,7 @@ public class CartClient {
     }
 
     public void deleteCart(Long cartId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + cartId)
                 .build().encode().toUri();
         try {
             restTemplate.delete(url);
@@ -72,7 +66,7 @@ public class CartClient {
     }
 
     public void updateCart(Long cartId, Cart cart) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cartId)
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + cartId)
                 .build().encode().toUri();
         try {
             restTemplate.put(url, cart);
@@ -81,10 +75,11 @@ public class CartClient {
         }
     }
 
-    public void addUpdateRemoveItemFromCart(Cart cart, Long itemId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cart.getId() + "&" + itemId)
-                .build().encode().toUri();
-        restTemplate.put(url, cart);
-    }
+//    public void addUpdateRemoveItemFromCart(Cart cart, Long itemId) {
+//        URI url = UriComponentsBuilder.fromHttpUrl(appConfig.getBackendEndpoint() + "/carts/" + cart.getId() + "&" + itemId)
+//                .build().encode().toUri();
+//        restTemplate.put(url, cart);
+//    }
+
 }
 

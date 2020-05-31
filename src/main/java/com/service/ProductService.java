@@ -5,8 +5,8 @@ import com.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -14,6 +14,20 @@ public class ProductService {
 
     @Autowired
     private ProductClient productClient;
+
+    private static ProductService productService;
+    public List<Product> products;
+
+    public ProductService() {
+        this.products = new ArrayList<>(productClient.getAllProducts());
+    }
+
+    public static ProductService getInstance() {
+        if (productService == null) {
+            productService = new ProductService();
+        }
+        return productService;
+    }
 
     public List<Product> getAllProducts() {
         return productClient.getAllProducts();
@@ -35,9 +49,9 @@ public class ProductService {
         productClient.deleteProduct(product.getId());
     }
 
-    public Set<Product> findByProductName(String name) {
-        return getAllProducts().stream()
+    public List<Product> findByProductName(String name) {
+        return products.stream()
                 .filter(product -> product.getName().contains(name))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 }

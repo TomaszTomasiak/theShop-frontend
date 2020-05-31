@@ -13,11 +13,17 @@ public class CartService {
     @Autowired
     private CartClient cartClient;
 
-    private List<Cart> carts;
+    private static CartService cartService;
+
+    public static CartService getInstance() {
+        if (cartService == null) {
+            cartService = new CartService();
+        }
+        return cartService;
+    }
 
     public List<Cart> getCarts() {
-        carts = cartClient.getAllCarts();
-        return carts;
+        return cartClient.getAllCarts();
     }
 
     public Cart getCart(Long cartId) {

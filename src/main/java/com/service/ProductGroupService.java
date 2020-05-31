@@ -1,13 +1,12 @@
 package com.service;
 
-
 import com.client.ProductGroupClient;
 import com.domain.ProductGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ProductGroupService {
@@ -15,11 +14,22 @@ public class ProductGroupService {
     @Autowired
     private ProductGroupClient client;
 
-    private List<ProductGroup> groups;
+    private static ProductGroupService productGroupService;
+    public List<ProductGroup> productGroupList;
 
-    public List<ProductGroup> getGroups() {
-        groups = client.getAllGroups();
-        return groups;
+    public ProductGroupService() {
+        this.productGroupList = new ArrayList<>(client.getAllGroups());
+    }
+
+    public static ProductGroupService getInstance() {
+        if (productGroupService == null) {
+            productGroupService = new ProductGroupService();
+        }
+        return productGroupService;
+    }
+
+    public List<ProductGroup> getProductGroupList() {
+        return client.getAllGroups();
     }
 
     public ProductGroup getGroup(Long id) {
@@ -37,7 +47,6 @@ public class ProductGroupService {
     public void deleteGroup(ProductGroup group) {
         client.deleteGroup(group.getId());
     }
-
 
     public Long groupId (ProductGroup group) {
         return group.getId();
