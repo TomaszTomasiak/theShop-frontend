@@ -18,9 +18,7 @@ import static java.util.Optional.ofNullable;
 @Component
 public class ItemClient {
 
-    @Autowired
-    RestTemplate restTemplate;
-
+    private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemClient.class);
     private static final String ENDPOINT = AppConfig.getItems();
 

@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @Component
-public class Session implements Serializable{
+public class Session implements Serializable {
 
     private static Session session;
 
@@ -32,15 +32,16 @@ public class Session implements Serializable{
         item = new Item();
         cart = new Cart();
         productGroup = new ProductGroup();
-       listOfProductsOnCart = new ArrayList<>();
+        listOfProductsOnCart = new ArrayList<>();
     }
 
     public static Session getInstance() {
-        if(session == null) {
+        if (session == null) {
             session = new Session();
         }
         return session;
     }
+
     public void cleanAll() {
         currentUser = new User();
         cart = new Cart();
@@ -49,7 +50,7 @@ public class Session implements Serializable{
         item = new Item();
         productGroup = new ProductGroup();
 
-        for (ProductOnCart tmp:listOfProductsOnCart) {
+        for (ProductOnCart tmp : listOfProductsOnCart) {
             listOfProductsOnCart.remove(tmp);
         }
     }

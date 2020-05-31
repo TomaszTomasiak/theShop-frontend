@@ -1,11 +1,9 @@
 package com.client;
 
 import com.config.AppConfig;
-import com.config.JsonBuilder;
 import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -21,10 +19,8 @@ import static java.util.Optional.ofNullable;
 public class UserClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserClient.class);
-
-    private RestTemplate restTemplate = new RestTemplate();
-
     private static final String endpoint = AppConfig.getUsers();
+    private final RestTemplate restTemplate = new RestTemplate();
 
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
@@ -53,7 +49,7 @@ public class UserClient {
         }
     }
 
-    public void deleteUser(Integer userId) {
+    public void deleteUser(Long userId) {
         URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + userId)
                 .build().encode().toUri();
         try {

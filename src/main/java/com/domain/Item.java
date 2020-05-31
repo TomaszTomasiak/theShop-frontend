@@ -14,7 +14,7 @@ public class Item {
     private Long productId;
 
     @JsonProperty
-    private int quantity;
+    private Integer quantity;
 
 //    @JsonProperty
 //    private Long orderId;

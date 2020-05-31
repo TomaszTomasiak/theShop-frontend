@@ -4,7 +4,7 @@ import com.config.AppConfig;
 import com.domain.ProductGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -17,9 +17,8 @@ import static java.util.Optional.ofNullable;
 
 @Component
 public class ProductGroupClient {
-    @Autowired
-    private RestTemplate restTemplate;
 
+    private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductGroupClient.class);
     private static final String endpoint = AppConfig.getGroups();
 
@@ -50,15 +49,15 @@ public class ProductGroupClient {
         }
     }
 
-    public void deleteGroup(Long groupId) {
-        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + groupId)
-                .build().encode().toUri();
-        try {
-            restTemplate.delete(url);
-        } catch (RestClientException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
+//    public void deleteGroup(Long groupId) {
+//        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + groupId)
+//                .build().encode().toUri();
+//        try {
+//            restTemplate.delete(url);
+//        } catch (RestClientException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        }
+//    }
 
     public ProductGroup createNewGroup(ProductGroup productGroup) {
         return restTemplate.postForObject(getUrl(), productGroup, ProductGroup.class);

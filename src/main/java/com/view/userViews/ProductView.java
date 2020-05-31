@@ -73,7 +73,6 @@ public class ProductView extends VerticalLayout {
             getUI().ifPresent(ui -> ui.navigate(""));
         });
 
-
         VerticalLayout productInfo =
                 new VerticalLayout(name, desc, group, available, price, pricePLN, priceEUR, priceGBP, priceUSD);
 

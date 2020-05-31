@@ -15,7 +15,7 @@ public class AppConfig {
    private static final String CURRENCY = "currency";
    private static final String GROUPS = "groups";
    private static final String USERS = "users";
-   private static final String MAIL_VALIDATOR = "mails";
+   private static final String MAIL_VALIDATOR = "mailValid";
 
 
    private AppConfig() {

@@ -30,7 +30,7 @@ public class UserClientTestSuite {
     private String mail = "abc@test.com";
     private String phoneNumber = "123456789";
     private String password = "passwordTest";
-    private Integer id = 12;
+    private Long id = 12L;
 
     @InjectMocks
     private UserClient userClient;
@@ -67,8 +67,8 @@ public class UserClientTestSuite {
     @Test
     public void shouldCreateUser() {
         //Given
-        User user = new User(1, firstName, lastName, mail, phoneNumber, password);
-        User createdUser = new User(15, firstName, lastName, mail, phoneNumber, password);
+        User user = new User(1L, firstName, lastName, mail, phoneNumber, password);
+        User createdUser = new User(15L, firstName, lastName, mail, phoneNumber, password);
 
         when(restTemplate.postForObject(url(), user, User.class)).thenReturn(createdUser);
 

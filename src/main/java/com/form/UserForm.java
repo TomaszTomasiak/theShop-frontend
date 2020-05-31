@@ -59,7 +59,7 @@ public class UserForm extends FormLayout {
 
     private void delete() {
         User user = binder.getBean();
-        long id = user.getId();
+        Long id = user.getId();
         userService.delete(id);
         setUser(null);
         usersAdminView.refresh();

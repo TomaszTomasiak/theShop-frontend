@@ -81,7 +81,7 @@ public class UserView extends VerticalLayout {
     }
 
     public void refresh() {
-        gridGroup.setItems(productGroupService.getProductGroupList());
+        gridGroup.setItems(productGroupService.getAllGroups());
         gridProduct.setItems(productService.getAllProducts());
     }
 

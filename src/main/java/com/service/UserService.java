@@ -38,7 +38,7 @@ public class UserService {
         userClient.saveUser(user);
     }
 
-    public void delete(Integer userId) {
+    public void delete(Long userId) {
         userClient.deleteUser(userId);
     }
 

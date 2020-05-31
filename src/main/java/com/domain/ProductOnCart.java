@@ -12,7 +12,7 @@ public class ProductOnCart {
 
     private Product product;
     private double price;
-    private int qty;
+    private Integer qty;
     private double value;
 
     public ProductOnCart(Product product, int qty) {

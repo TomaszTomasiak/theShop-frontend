@@ -20,9 +20,7 @@ public class CartClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartClient.class);
     private static final String ENDPOINT = AppConfig.getCarts();
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)

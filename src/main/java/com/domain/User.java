@@ -12,7 +12,7 @@ import lombok.*;
 public class User {
 
     @JsonProperty
-    private Integer id;
+    private Long id;
     @JsonProperty
     private String firstName;
     @JsonProperty
