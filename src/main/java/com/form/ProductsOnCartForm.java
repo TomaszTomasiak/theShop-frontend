@@ -8,6 +8,7 @@ import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -34,8 +35,6 @@ public class ProductsOnCartForm extends FormLayout {
     private Button update = new Button("Update");
     private Button remove = new Button("Remove");
     private Binder<ProductOnCart> binder = new Binder<>(ProductOnCart.class);
-
-
     private CartView cartView;
 
 
@@ -50,6 +49,7 @@ public class ProductsOnCartForm extends FormLayout {
         VerticalLayout info = new VerticalLayout(productInfo, priceInfo, qty);
         HorizontalLayout buttons = new HorizontalLayout(update, remove);
         add(info, buttons);
+        buttons.setVisible(false);
         binder.bindInstanceFields(this);
 
     }
@@ -57,7 +57,7 @@ public class ProductsOnCartForm extends FormLayout {
     public void updateOnCart() {
         ProductOnCart productOnCart = binder.getBean();
         updateItemOnCart(productOnCart);
-        updateProductsOnCardtList(productOnCart);
+        updateProductsOnCardList(productOnCart);
         setProductOnCart(null);
         cartView.refresh();
     }
@@ -109,7 +109,7 @@ public class ProductsOnCartForm extends FormLayout {
         }
     }
 
-    public void updateProductsOnCardtList(ProductOnCart productOnCart) {
+    public void updateProductsOnCardList(ProductOnCart productOnCart) {
         List<ProductOnCart> list = session.getListOfProductsOnCart().stream()
                 .filter(p -> p.getProduct().equals(productOnCart.getProduct()))
                 .collect(Collectors.toList());

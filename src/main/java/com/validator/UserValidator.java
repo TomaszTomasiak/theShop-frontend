@@ -1,15 +1,15 @@
-package com.validator;
-
-import com.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-@Component
-public class UserValidator {
-
-    @Autowired
-    UserService userService;
-
+//package com.validator;
+//
+//import com.service.UserService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Component;
+//
+//@Component
+//public class UserValidator {
+//
+//    @Autowired
+//    UserService userService;
+//
 //    public boolean validateUser (User user) {
 //        user = userService.userByMail(user.getMailAdress());
 //        if (user != null) {
@@ -27,7 +27,7 @@ public class UserValidator {
 //            throw new UserException(UserException.ERR_USER_NOT_FOUND);
 //        }
 //    }
-
+//
 //    public boolean validatePassword(User user) {
 //
 //        String pass = password.getValue();
@@ -39,4 +39,4 @@ public class UserValidator {
 //            return false;
 //        }
 //    }
-}
+//}

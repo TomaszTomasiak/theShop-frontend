@@ -2,11 +2,12 @@ package com.service;
 
 import com.client.CartClient;
 import com.domain.Cart;
-import com.domain.Item;
+import com.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -43,8 +44,14 @@ public class CartService {
         cartClient.deleteCart(cart.getId());
     }
 
-//    public void addItemToCart(Cart cart) {
-//        cartClient.addUpdateRemoveItemFromCart(cart, cart.getId());
-//    }
+    public Cart findCartIdByUserAndListOfItems(Cart cart) {
+        if(cart.getOrderId() == null) {
+            List<Cart> cartList = getCarts().stream()
+                    .filter(c -> c.getUserId().equals(Session.getInstance().getCurrentUser().getId()) && c.getItems().equals(Session.getInstance().getCart().getItems()))
+                    .collect(Collectors.toList());
+            return cartList.get(0);
+        }
+        return new Cart();
+    }
 
 }

@@ -16,6 +16,15 @@ public class ItemService {
     @Autowired
     private ItemClient itemClient;
 
+    private static ItemService itemService;
+
+    public static ItemService getInstance() {
+        if (itemService == null) {
+            itemService = new ItemService();
+        }
+        return itemService;
+    }
+
     private List<Item> items;
 
     public ItemService() {

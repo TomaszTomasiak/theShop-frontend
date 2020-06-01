@@ -1,6 +1,7 @@
 package com.service;
 
 import com.config.AppConfig;
+import com.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -10,6 +11,19 @@ public class CurrencyService {
 
    @Autowired
    private RestTemplate restTemplate;
+
+    private static CurrencyService currencyService;
+    private TheShopService theShopService = TheShopService.getInstance();
+
+    private CurrencyService() {
+    }
+
+    public static CurrencyService getInstance() {
+        if (currencyService == null) {
+            currencyService = new CurrencyService();
+        }
+        return currencyService;
+    }
 
    private static final String url = AppConfig.getCurrency();
 
@@ -31,24 +45,19 @@ public class CurrencyService {
         return GBP;
     }
 
-    public Double valueEUR(Double pricePln) {
-        Double result = pricePln / getEUR();
-        return roundToDecimal(result, 2);
+    public Double valueEUR(Double valuePln) {
+        Double result = valuePln / getEUR();
+        return theShopService.roundToDecimal(result, 2);
     }
 
-    public Double valueGBP(Double pricePln) {
-        Double result = pricePln / getGBP();
-        return roundToDecimal(result, 2);
+    public Double valueGBP(Double valuePln) {
+        Double result = valuePln / getGBP();
+        return theShopService.roundToDecimal(result, 2);
     }
 
-    public Double valueUSD(Double pricePln) {
-        Double result = pricePln / getUSD();
-        return roundToDecimal(result, 2);
+    public Double valueUSD(Double valuePln) {
+        Double result = valuePln / getUSD();
+        return theShopService.roundToDecimal(result, 2);
     }
 
-    private static double roundToDecimal(double num, int dec) {
-        int multi = (int) Math.pow(10, dec);
-        int temp = (int) Math.round(num * multi);
-        return (double) temp / multi;
-    }
 }

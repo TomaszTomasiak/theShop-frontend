@@ -15,9 +15,10 @@ public class Cart {
     @JsonProperty
     private List<Item> items = new ArrayList<>();
 
-//    @JsonProperty
-//    private Long orderId;
+    @JsonProperty
+    private Long orderId;
 
     @JsonProperty
     private Long userId;
+
 }

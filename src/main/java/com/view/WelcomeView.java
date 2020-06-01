@@ -2,6 +2,7 @@ package com.view;
 
 import com.config.AdminConfig;
 import com.domain.User;
+import com.service.TheShopService;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
@@ -27,13 +28,12 @@ public class WelcomeView extends VerticalLayout {
     private Button loginButton = new Button("Log in to account");
     private Button createNewAccount = new Button("Create new account");
 
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AdminConfig adminConfig;
 
     private Session session = Session.getInstance();
+    private TheShopService theShopService = TheShopService.getInstance();
 
     public WelcomeView() {
 
@@ -67,7 +67,7 @@ public class WelcomeView extends VerticalLayout {
     }
 
     public boolean validateUser() {
-        User user = userService.fetchUserByMail(mail.getValue());
+        User user = theShopService.fetchUserByMail(mail.getValue());
         if (user != null && (password.getValue()).equals(user.getPassword())) {
             session.setCurrentUser(user);
             return true;
@@ -85,5 +85,4 @@ public class WelcomeView extends VerticalLayout {
         }
         return false;
     }
-
 }

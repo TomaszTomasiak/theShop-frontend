@@ -24,20 +24,15 @@ import java.util.List;
 @Route("product_view")
 public class ProductView extends VerticalLayout {
 
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private CartService cartService;
-
-    @Autowired
-    private ProductService productService;
-
+    private CurrencyService currencyService = CurrencyService.getInstance();
+    private CartService cartService = CartService.getInstance();
+    private ProductService productService = ProductService.getInstance();
+    private ItemService itemService = ItemService.getInstance();
     private Session session = Session.getInstance();
 
     private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
-    private Text logged = new Text("Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName());
+    private Text logged = new Text("");
     private Image image = new Image("http://www.plslights.com/index.php/home/vendor_profile/get_slider/", "src/main/resources/medium-default-product.jpg");
     private H2 name = new H2(session.getProduct().getName());
     private Text desc = new Text(session.getProduct().getDescription());
@@ -62,6 +57,7 @@ public class ProductView extends VerticalLayout {
         header.setFlexGrow(1, back);
         header.setPadding(true);
         header.setSpacing(true);
+        logged.setText(session.nameOfLoggedUser());
 
         back.addClickListener(event -> {
             session.setProduct(null);
@@ -102,28 +98,36 @@ public class ProductView extends VerticalLayout {
 
     public Item newItem(double qty) {
 
-        Item item = new Item();
-        item.setProductId(session.getProduct().getId());
+        Item newItem = new Item();
+        newItem.setProductId(session.getProduct().getId());
         int intQty = (int) qty;
-        item.setQuantity(intQty);
-        //itemService.saveItem(item);
-        session.setItem(item);
-        addItemToCart(session.getItem());
-        addToList(item);
+        newItem.setQuantity(intQty);
 
-        return item;
+        //
+        Item itemFromDataBase = itemService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
+        if(itemFromDataBase.getId() != null) {
+            session.setItem(itemFromDataBase);
+        } else {
+            itemService.saveItem(newItem);
+            Item savedItem = itemService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
+            session.setItem(savedItem);
+        }
+        addItemToCart(session.getItem());
+        addToList(session.getItem());
+
+        return newItem;
     }
 
     public void addItemToCart(Item item) {
 
-        if (session.getCart().getItems().size() > 0) {
+        if (session.getCart().getUserId() == null) {
+            Cart cart = new Cart();
+            cart.setUserId(session.getCurrentUser().getId());
+            session.setCart(cart);
             session.getCart().getItems().add(item);
 
         } else {
-            Cart cart = new Cart();
-            cart.setUserId(session.getCurrentUser().getId());
-            cart.getItems().add(item);
-            session.setCart(cart);
+            session.getCart().getItems().add(item);
         }
     }
 

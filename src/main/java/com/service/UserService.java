@@ -4,11 +4,7 @@ import com.client.UserClient;
 import com.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Service
 public class UserService {
@@ -46,31 +42,8 @@ public class UserService {
         return userClient.getUser(userId);
     }
 
-    public User fetchUserByMail(String mail) {
-        List<User> usersWithIndicatedMail = users.stream()
-                .filter(user -> user.getMailAdress().equals(mail.toLowerCase()))
-                .collect(Collectors.toList());
-        if (usersWithIndicatedMail.size() != 0) {
-            return usersWithIndicatedMail.get(0);
-        }
-        return new User();
-    }
-
-    public Set<User> findByLastName(String lastName) {
-        return users.stream().filter(user -> user.getLastName().contains(lastName)).collect(Collectors.toSet());
-    }
-
-    public Set<User> findByFirstName(String firstName) {
-        return users.stream().filter(user -> user.getFirstName().contains(firstName)).collect(Collectors.toSet());
-    }
-
-    public Set<User> findByMail(String mail) {
-        return users.stream().filter(user -> user.getMailAdress().contains(mail)).collect(Collectors.toSet());
-    }
-
-    public Set<User> findByPhoneNumber(String phone) {
-        return users.stream().filter(user -> user.getPhoneNumber().contains(phone)).collect(Collectors.toSet());
+    public void updateUser(Long userId, User user) {
+        userClient.updateUser(userId, user);
     }
 
 }
-

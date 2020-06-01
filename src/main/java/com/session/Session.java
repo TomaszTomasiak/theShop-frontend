@@ -54,4 +54,12 @@ public class Session implements Serializable {
             listOfProductsOnCart.remove(tmp);
         }
     }
+
+    public String nameOfLoggedUser () {
+        return "Logged: " + currentUser.getFirstName() + " " + currentUser.getLastName();
+    }
+
+    public String loggedAdmin () {
+        return "Logged: Admin";
+    }
 }

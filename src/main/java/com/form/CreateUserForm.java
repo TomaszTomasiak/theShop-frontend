@@ -1,6 +1,7 @@
 package com.form;
 
 import com.domain.User;
+import com.service.TheShopService;
 import com.service.UserService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
@@ -14,14 +15,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.view.userViews.CreateUserView;
-
 import java.io.IOException;
 
 public class CreateUserForm extends FormLayout {
 
     private UserService userService = UserService.getInstance();
     private Session session = Session.getInstance();
-
+    private TheShopService theShopService = TheShopService.getInstance();
     private IntegerField id = new IntegerField("User ID");
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
@@ -31,8 +31,6 @@ public class CreateUserForm extends FormLayout {
     private PasswordField password = new PasswordField("Password");
     private Button save = new Button("Create account");
     private Button cancel = new Button("Cancel");
-    //private Binder<User> binder = new Binder<>(User.class);
-    private Text notFit = new Text("Password and repeated password are not the same");
 
     private CreateUserView createUserView;
 
@@ -52,9 +50,7 @@ public class CreateUserForm extends FormLayout {
         VerticalLayout fields = new VerticalLayout(firstName, lastName, mailAdress, phoneNumber, password, buttons);
         add(fields);
         add(userNotCreated);
-//        id.setValue(0);
-//        id.setVisible(false);
-        //binder.bindInstanceFields(this);
+
         firstName.focus();
         save.addClickListener(event -> {
             try {
@@ -72,12 +68,12 @@ public class CreateUserForm extends FormLayout {
     }
 
     private void saveUser() throws IOException {
-//        User newUser = binder.getBean();
+
         User newUser =
                 new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
         if (!isThereUserWithMail(newUser)) {
             userService.createNewUser(newUser);
-            session.setCurrentUser(userService.fetchUserByMail(newUser.getMailAdress()));
+            session.setCurrentUser(theShopService.fetchUserByMail(newUser.getMailAdress()));
         }
         createUserView.add(new Notification("Account with this email adress has already exist.\n"));
     }
@@ -96,10 +92,9 @@ public class CreateUserForm extends FormLayout {
 
     public boolean isThereUserWithMail(User user) {
 
-        if (userService.fetchUserByMail(user.getMailAdress()).getMailAdress() != null) {
+        if (theShopService.fetchUserByMail(user.getMailAdress()).getMailAdress() != null) {
             return true;
         }
         return false;
     }
-
 }

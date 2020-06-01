@@ -19,7 +19,8 @@ public class OrderService {
     @Autowired
     private EmailService emailService;
 
-    private final Session session = Session.getInstance();
+    private Session session = Session.getInstance();
+    private TheShopService theShopService = TheShopService.getInstance();
     private static OrderService orderService;
 
     public List<Order> orders;
@@ -46,11 +47,13 @@ public class OrderService {
     public void saveOrder(Order order) {
         Order newOrder = orderClient.createNewOrder(order);
         session.setOrder(newOrder);
-        emailService.send(new Mail(
-                session.getCurrentUser().getMailAdress(),
-                "Order confirmation",
-                "You just placed the order number: " + session.getOrder().getId()
-        ));
+        if (theShopService.findOrderByUserAndCart()) {
+            emailService.send(new Mail(
+                    session.getCurrentUser().getMailAdress(),
+                    "Order confirmation",
+                    "You have just placed the order number: " + session.getOrder().getId()
+            ));
+        }
     }
 
     public void updateOrder(Order order) {
@@ -60,15 +63,4 @@ public class OrderService {
     public void deleteOrder(Order order) {
         orderClient.deleteOrder(order.getId());
     }
-
-//    public void findOrdersWithTotalValueBeetween(Double from, Double to) {
-//        orderClient.getAllOrders().stream()
-//                .filter(order -> {
-//                    if(from != null ){
-//
-//                    }
-//                    order.getTotalValue() >
-//                } )
-//    }
-
 }

@@ -14,17 +14,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "user_view")
 public class UserView extends VerticalLayout {
 
-    @Autowired
-    private ProductGroupService productGroupService;
-
-    @Autowired
-    private ProductService productService;
-
+    private ProductGroupService productGroupService = ProductGroupService.getInstance();
+    private ProductService productService = ProductService.getInstance();
     private Session session = Session.getInstance();
 
     private TextField filter = new TextField();
@@ -35,7 +30,7 @@ public class UserView extends VerticalLayout {
     private Grid<Product> gridProduct = new Grid<>(Product.class);
 
     public UserView() {
-        logged.setText(nameOfLoggedUser());
+        logged.setText(session.nameOfLoggedUser());
         filter.setPlaceholder("Filter by product name");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -65,6 +60,7 @@ public class UserView extends VerticalLayout {
         });
 
         showProducts.addClickListener(event -> refresh());
+
         add(header, mainContent);
 
         logout.addClickListener(event -> {
@@ -85,7 +81,4 @@ public class UserView extends VerticalLayout {
         gridProduct.setItems(productService.getAllProducts());
     }
 
-    public String nameOfLoggedUser () {
-        return "Logged: " + session.getCurrentUser().getFirstName() + " " + session.getCurrentUser().getLastName();
-    }
 }

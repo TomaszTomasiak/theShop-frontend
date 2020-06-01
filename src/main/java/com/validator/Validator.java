@@ -1,18 +1,42 @@
 package com.validator;
 
-import com.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
 
 @Component
 public class Validator {
 
-    @Autowired
-    private UserService userService;
+    private static Validator validator;
 
-
-    public void validatePayment() {
-
+    private Validator() {
     }
+
+    public static Validator getInstance() {
+        if (validator == null) {
+            validator = new Validator();
+        }
+        return validator;
+    }
+
+    private boolean orderPaid = false;
+
+    public boolean isOrderPaid() {
+        return orderPaid;
+    }
+
+    public void setOrderPaid(boolean orderPaid) {
+        this.orderPaid = orderPaid;
+    }
+
+    public boolean validatePayment() {
+    boolean result = orderPaid;
+        Random generator = new Random();
+        if(!isOrderPaid()) {
+            setOrderPaid(result && generator.nextBoolean());
+        }
+        return isOrderPaid();
+    }
+
 }
 

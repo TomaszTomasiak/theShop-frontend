@@ -54,6 +54,6 @@ public class MailCreatorService {
         String resume = "\n";
         String goodbay = "Thank you for your order\n" +
                 "Have a nice day!";
-        return resume + goodbay();
+        return resume + goodbay;
     }
 }
