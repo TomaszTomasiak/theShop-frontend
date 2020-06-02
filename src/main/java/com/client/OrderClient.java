@@ -1,9 +1,10 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -17,9 +18,11 @@ import static java.util.Optional.ofNullable;
 @Component
 public class OrderClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderClient.class);
-    private static final String endpoint = AppConfig.getOrders();
+    private static final String endpoint = TheShopBackendConfig.getOrders();
 
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(endpoint)

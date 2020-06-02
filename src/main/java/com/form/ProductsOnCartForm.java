@@ -4,6 +4,7 @@ import com.domain.Cart;
 import com.domain.Item;
 import com.domain.ProductOnCart;
 import com.service.ItemService;
+import com.service.TheShopService;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -15,17 +16,14 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.view.userViews.CartView;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductsOnCartForm extends FormLayout {
 
-    @Autowired
-    private ItemService itemService;
-
-    private Session session = Session.getInstance();
+    private final TheShopService theShopService = TheShopService.getInstance();
+    private final Session session = Session.getInstance();
     private Text productInfo = new Text("");
     private Text priceInfo = new Text("");
     private TextField price = new TextField();
@@ -79,8 +77,8 @@ public class ProductsOnCartForm extends FormLayout {
 
         currentCart.getItems().remove(itemsOnCart.get(0));
 
-        if (itemService.findItemWithProductIdAndQty(productOnCart.getProduct(), productOnCart.getQty()).getId() != null) {
-            currentCart.getItems().add(itemService.findItemWithProductIdAndQty(productOnCart.getProduct(), productOnCart.getQty()));
+        if (theShopService.findItemWithProductIdAndQty(productOnCart.getProduct(), productOnCart.getQty()).getId() != null) {
+            currentCart.getItems().add(theShopService.findItemWithProductIdAndQty(productOnCart.getProduct(), productOnCart.getQty()));
         } else {
             Item newItem = new Item();
             newItem.setProductId(productOnCart.getProduct().getId());

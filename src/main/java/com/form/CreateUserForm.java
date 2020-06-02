@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.view.userViews.CreateUserView;
+
 import java.io.IOException;
 
 public class CreateUserForm extends FormLayout {
@@ -73,7 +74,7 @@ public class CreateUserForm extends FormLayout {
                 new User(firstName.getValue(), lastName.getValue(), mailAdress.getValue(), phoneNumber.getValue(), password.getValue());
         if (!isThereUserWithMail(newUser)) {
             userService.createNewUser(newUser);
-            session.setCurrentUser(theShopService.fetchUserByMail(newUser.getMailAdress()));
+            session.setCurrentUser(userService.fetchUserByMail(newUser.getMailAdress()));
         }
         createUserView.add(new Notification("Account with this email adress has already exist.\n"));
     }
@@ -92,7 +93,7 @@ public class CreateUserForm extends FormLayout {
 
     public boolean isThereUserWithMail(User user) {
 
-        if (theShopService.fetchUserByMail(user.getMailAdress()).getMailAdress() != null) {
+        if (userService.fetchUserByMail(user.getMailAdress()).getMailAdress() != null) {
             return true;
         }
         return false;

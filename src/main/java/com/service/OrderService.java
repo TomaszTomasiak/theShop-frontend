@@ -7,7 +7,6 @@ import com.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,11 +18,15 @@ public class OrderService {
     @Autowired
     private EmailService emailService;
 
-    private Session session = Session.getInstance();
-    private TheShopService theShopService = TheShopService.getInstance();
+    @Autowired
+    private TheShopService theShopService;
+
+    private final Session session = Session.getInstance();
+
     private static OrderService orderService;
 
-    public List<Order> orders;
+    private OrderService() {
+    }
 
     public static OrderService getInstance() {
         if (orderService == null) {
@@ -32,9 +35,7 @@ public class OrderService {
         return orderService;
     }
 
-    public OrderService() {
-        this.orders = new ArrayList<>(orderClient.getAllOrders());
-    }
+
 
     public List<Order> getOrders() {
         return orderClient.getAllOrders();

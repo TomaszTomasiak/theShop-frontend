@@ -1,9 +1,10 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -19,11 +20,13 @@ import static java.util.Optional.ofNullable;
 public class UserClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserClient.class);
-    private static final String endpoint = AppConfig.getUsers();
-    private final RestTemplate restTemplate = new RestTemplate();
+    private static final String ENDPOINT = TheShopBackendConfig.getUsers();
+
+
+    private RestTemplate restTemplate = new RestTemplate();
 
     private URI getUrl() {
-        URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
                 .build().encode().toUri();
         return url;
     }
@@ -36,6 +39,15 @@ public class UserClient {
             LOGGER.error(e.getMessage(), e);
             return new ArrayList<>();
         }
+        /*
+        try {
+            TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url(), TrelloBoardDto[].class);
+            return Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new ArrayList<>();
+        }
+         */
     }
 
     public User getUser(Long userId) {
@@ -59,14 +71,22 @@ public class UserClient {
         }
     }
 
-    public User saveUser(User user) {
+    public void saveUser(User user) {
         try {
-            User created = restTemplate.postForObject(getUrl(), user, User.class);
-           return created;
+            restTemplate.postForObject(getUrl(), user, User.class);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return null;
+
+
+//        TheClientHTTP client = new TheClientHTTP(appConfig.getBackendEndpoint() + "users");
+//
+//        try {
+//            //client.sendObject(user);
+//            restTemplate.postForObject(getUrl(), user, User.class);
+//        } catch (RestClientException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        }
     }
 
     public void updateUser(Long userId, User user) {

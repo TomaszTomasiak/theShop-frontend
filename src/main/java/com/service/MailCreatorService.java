@@ -18,8 +18,7 @@ public class MailCreatorService {
     @Autowired
     private CompanyConfig companyConfig;
 
-    @Autowired
-    private Session session;
+    private final Session session = Session.getInstance();
 
     @Autowired
     @Qualifier("templateEngine")

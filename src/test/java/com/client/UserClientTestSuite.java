@@ -1,6 +1,6 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.User;
 
 
@@ -36,14 +36,14 @@ public class UserClientTestSuite {
     private UserClient userClient;
 
     @Mock
-    private AppConfig appConfig;
+    private TheShopBackendConfig theShopBackendConfig;
 
     @Mock
     RestTemplate restTemplate;
 
     @Before
     public void init() {
-        when(appConfig.getBackendEndpoint()).thenReturn(endpoint);
+        when(theShopBackendConfig.getBackendEndpoint()).thenReturn(endpoint);
     }
 
 

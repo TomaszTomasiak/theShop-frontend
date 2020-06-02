@@ -3,29 +3,26 @@ package com.config;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppConfig {
+public class TheShopBackendConfig {
 
-   private static AppConfig appConfig;
+   private static TheShopBackendConfig theShopBackendConfig;
 
    private static final String BACKEND_ENDPOINT = "http://localhost:4600/api/v1/";
    private static final String CARTS = "carts";
    private static final String PRODUCTS = "products";
    private static final String ITEMS = "items";
    private static final String ORDERS = "orders";
-   private static final String CURRENCY = "currency";
    private static final String GROUPS = "groups";
    private static final String USERS = "users";
-   private static final String MAIL_VALIDATOR = "mailValid";
 
-
-   private AppConfig() {
+   private TheShopBackendConfig() {
    }
 
-   public static AppConfig getInstance() {
-      if (appConfig == null) {
-         appConfig = new AppConfig();
+   public static TheShopBackendConfig getInstance() {
+      if (theShopBackendConfig == null) {
+         theShopBackendConfig = new TheShopBackendConfig();
       }
-      return appConfig;
+      return theShopBackendConfig;
    }
 
    public static String getBackendEndpoint() {
@@ -48,10 +45,6 @@ public class AppConfig {
       return BACKEND_ENDPOINT + ORDERS;
    }
 
-   public static String getCurrency() {
-      return BACKEND_ENDPOINT + CURRENCY;
-   }
-
    public static String getGroups() {
       return BACKEND_ENDPOINT + GROUPS;
    }
@@ -60,7 +53,4 @@ public class AppConfig {
       return BACKEND_ENDPOINT + USERS;
    }
 
-   public static String getMailValidator() {
-      return BACKEND_ENDPOINT + MAIL_VALIDATOR;
-   }
 }

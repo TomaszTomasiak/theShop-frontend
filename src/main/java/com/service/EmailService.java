@@ -29,7 +29,8 @@ public class EmailService {
             javaMailSender.send(createMimelMessage(mail));
             LOGGER.info("Email has been sent.");
         } catch (MailException e) {
-            LOGGER.error("Failed to process email sending: ", e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
+            LOGGER.info("Failed to process email sending: ");
         }
     }
 

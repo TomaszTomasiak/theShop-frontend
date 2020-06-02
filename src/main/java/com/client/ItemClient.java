@@ -1,10 +1,9 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +19,7 @@ public class ItemClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemClient.class);
-    private static final String ENDPOINT = AppConfig.getItems();
+    private static final String ENDPOINT = TheShopBackendConfig.getItems();
 
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)

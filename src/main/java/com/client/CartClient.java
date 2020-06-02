@@ -1,10 +1,9 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.Cart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +18,7 @@ import static java.util.Optional.ofNullable;
 public class CartClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartClient.class);
-    private static final String ENDPOINT = AppConfig.getCarts();
+    private static final String ENDPOINT = TheShopBackendConfig.getCarts();
     private final RestTemplate restTemplate = new RestTemplate();
 
     private URI getUrl() {

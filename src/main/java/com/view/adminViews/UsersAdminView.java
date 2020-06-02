@@ -1,6 +1,5 @@
 package com.view.adminViews;
 
-import com.domain.Order;
 import com.domain.User;
 import com.form.UserForm;
 import com.service.TheShopService;
@@ -33,14 +32,18 @@ public class UsersAdminView extends VerticalLayout {
     private TextField phoneFilter = new TextField();
     private TextField firstNameFilter = new TextField();
     private NumberField findUserById = new NumberField();
+    private NumberField checkMailValidById = new NumberField();
     private UserForm form = new UserForm(this);
     private Button addNewUser = new Button("Add new user");
     private Button orders = new Button("Orders page");
     private Button groups = new Button("ProductGroups page");
     private Button products = new Button("Products page");
     private Text infoNumber = new Text("");
+    private Text infoCheck = new Text("");
     private List<User> list = new ArrayList<>();
+    //private List<CheckEmailsValidation> checkEmailsValidationList = new ArrayList<>();
     private String infoNumberOfUsers = "";
+    private String infoIsMailValid = "";
 
     public UsersAdminView() {
 
@@ -70,6 +73,10 @@ public class UsersAdminView extends VerticalLayout {
         findUserById.setClearButtonVisible(true);
         findUserById.setValueChangeMode(ValueChangeMode.LAZY);
         findUserById.addValueChangeListener(e -> findById());
+        checkMailValidById.setPlaceholder("Check mail user by ID");
+        checkMailValidById.setClearButtonVisible(true);
+        checkMailValidById.setValueChangeMode(ValueChangeMode.LAZY);
+        checkMailValidById.addValueChangeListener(e -> checkMailValidation());
 
         grid.setColumns("id", "firstName", "lastName", "mailAdress", "phoneNumber", "password");
 
@@ -82,7 +89,7 @@ public class UsersAdminView extends VerticalLayout {
         products.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("admin_products")));
         orders.addClickListener(event -> getUI().ifPresent(ui -> ui.navigate("admin_main")));
 
-        HorizontalLayout header = new HorizontalLayout(findUserById, lastNameFilter, firstNameFilter, mailFilter, phoneFilter, addNewUser, infoNumber);
+        HorizontalLayout header = new HorizontalLayout(checkMailValidById, findUserById, lastNameFilter, firstNameFilter, mailFilter, phoneFilter, addNewUser, infoNumber, infoCheck);
         HorizontalLayout directions = new HorizontalLayout(orders, groups, products, logout, logged);
 
         HorizontalLayout mainContent = new HorizontalLayout(grid, form);
@@ -137,5 +144,17 @@ public class UsersAdminView extends VerticalLayout {
         tmpList.add(searchedOrder);
         this.list = tmpList;
         grid.setItems(list);
+    }
+
+    public void checkMailValidation() {
+        List<User> tmpList = new ArrayList<>();
+        double idDouble = findUserById.getValue();
+        long id = (long) idDouble;
+
+        User searchedUser = userService.getUser(id);
+        tmpList.add(searchedUser);
+        this.list = tmpList;
+        grid.setItems(list);
+        infoIsMailValid = "Mail: " + searchedUser.getMailAdress() + theShopService.isValid(searchedUser);
     }
 }

@@ -1,10 +1,7 @@
 package com.view.userViews;
 
 import com.domain.*;
-import com.service.CartService;
-import com.service.CurrencyService;
-import com.service.ItemService;
-import com.service.ProductService;
+import com.service.*;
 import com.session.Session;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -24,11 +21,12 @@ import java.util.List;
 @Route("product_view")
 public class ProductView extends VerticalLayout {
 
-    private CurrencyService currencyService = CurrencyService.getInstance();
-    private CartService cartService = CartService.getInstance();
-    private ProductService productService = ProductService.getInstance();
-    private ItemService itemService = ItemService.getInstance();
-    private Session session = Session.getInstance();
+    private final CurrencyService currencyService = CurrencyService.getInstance();
+    private final CartService cartService = CartService.getInstance();
+    private final ProductService productService = ProductService.getInstance();
+    private final ItemService itemService = ItemService.getInstance();
+    private final TheShopService theShopService = TheShopService.getInstance();
+    private final Session session = Session.getInstance();
 
     private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
@@ -104,12 +102,12 @@ public class ProductView extends VerticalLayout {
         newItem.setQuantity(intQty);
 
         //
-        Item itemFromDataBase = itemService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
+        Item itemFromDataBase = theShopService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
         if(itemFromDataBase.getId() != null) {
             session.setItem(itemFromDataBase);
         } else {
             itemService.saveItem(newItem);
-            Item savedItem = itemService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
+            Item savedItem = theShopService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
             session.setItem(savedItem);
         }
         addItemToCart(session.getItem());

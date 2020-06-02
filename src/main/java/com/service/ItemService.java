@@ -2,13 +2,10 @@ package com.service;
 
 import com.client.ItemClient;
 import com.domain.Item;
-import com.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ItemService {
@@ -18,6 +15,9 @@ public class ItemService {
 
     private static ItemService itemService;
 
+    private ItemService() {
+    }
+
     public static ItemService getInstance() {
         if (itemService == null) {
             itemService = new ItemService();
@@ -25,11 +25,7 @@ public class ItemService {
         return itemService;
     }
 
-    private List<Item> items;
 
-    public ItemService() {
-        this.items = new ArrayList<>(itemClient.getAllItems());
-    }
 
     public List<Item> getItems() {
         return itemClient.getAllItems();
@@ -49,17 +45,6 @@ public class ItemService {
 
     public void deleteItem(Item item) {
         itemClient.deleteItem(item.getId());
-    }
-
-    public Item findItemWithProductIdAndQty(Product product, Integer qty) {
-        List<Item> theItems = itemClient.getAllItems().stream()
-                .filter(item -> item.getProductId().equals(product))
-                .filter(item -> item.getQuantity() == qty)
-                .collect(Collectors.toList());
-        if (theItems.size() != 0) {
-            return theItems.get(0);
-        }
-        return new Item();
     }
 
 }

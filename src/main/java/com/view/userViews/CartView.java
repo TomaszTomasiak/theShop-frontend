@@ -101,8 +101,8 @@ public class CartView extends VerticalLayout {
         newCart.setUserId(session.getCurrentUser().getId());
         newCart.setItems(session.getCart().getItems());
         cartService.saveCart(newCart);
-        if (cartService.findCartIdByUserAndListOfItems(newCart) != null) {
-            session.setCart(cartService.findCartIdByUserAndListOfItems(newCart));
+        if (theShopService.findCartIdByUserAndListOfItems(newCart) != null) {
+            session.setCart(theShopService.findCartIdByUserAndListOfItems(newCart));
         }
         Order newOrder = new Order();
         newOrder.setCartId(session.getCart().getId());

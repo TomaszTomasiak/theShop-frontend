@@ -1,27 +1,41 @@
 package com.service;
 
-import com.domain.Order;
-import com.domain.Product;
-import com.domain.ProductGroup;
-import com.domain.User;
+import com.domain.*;
+import com.domain.externalDto.EmailValidatorDto;
 import com.session.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class TheShopService {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private ProductGroupService productGroupService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private MailValidatorApiService mailValidatorApiService;
+
+    private final Session session = Session.getInstance();
     private static TheShopService theShopService;
-    private UserService userService = UserService.getInstance();
-    private ProductService productService = ProductService.getInstance();
-    private ProductGroupService productGroupService = ProductGroupService.getInstance();
-    private ItemService itemService = ItemService.getInstance();
-    private CurrencyService currencyService = CurrencyService.getInstance();
-    private CartService cartService = CartService.getInstance();
-    private OrderService orderService = OrderService.getInstance();
-    private Session session = Session.getInstance();
 
     private TheShopService() {
     }
@@ -41,44 +55,41 @@ public class TheShopService {
 
 
     public double totalValue(List<Order> orders) {
-        double sum =  orders.stream()
+        double sum = orders.stream()
                 .mapToDouble(Order::getTotalValue)
                 .sum();
         return roundToDecimal(sum, 2);
     }
 
-    public long numberOfOrders(List<Order> orders){
-        return orders.stream()
-                .count();
+    public long numberOfOrders(List<Order> orders) {
+        return orders.size();
     }
 
-    public long numberOfUsers(List<User> users){
-        return users.stream()
-                .count();
+    public long numberOfUsers(List<User> users) {
+        return users.size();
     }
 
-    public long numberOfProducts(List<Product> products){
-        return products.stream()
-                .count();
+    public long numberOfProducts(List<Product> products) {
+        return products.size();
     }
 
-    public long numberOfGroups(List<ProductGroup> productGroups){
-        return productGroups.stream()
-                .count();
+    public long numberOfGroups(List<ProductGroup> productGroups) {
+        return productGroups.size();
     }
+
 
     public boolean findOrderByUserAndCart() {
-        Iterator<Order> orderIterator = orderService.getOrders().stream()
+        List<Order> list = orderService.getOrders().stream()
                 .filter(o -> o.getUserId().equals(session.getCurrentUser().getId()) && o.getCartId().equals(session.getCart().getId()))
-                .iterator();
-        while (orderIterator.hasNext()) {
-            session.setOrder(orderIterator.next());
+                .collect(Collectors.toList());
+        if (list.size() != 0) {
+            session.setOrder(list.get(0));
             return true;
         }
         return false;
     }
 
-    public List<Order> findOrdersByDateOfOrdered (LocalDate from, LocalDate to) {
+    public List<Order> findOrdersByDateOfOrdered(LocalDate from, LocalDate to) {
         if (from == null) {
             from = LocalDate.now().minusYears(Integer.MAX_VALUE);
         } else if (to == null) {
@@ -102,16 +113,6 @@ public class TheShopService {
         return orderService.getOrders().stream()
                 .filter(order -> order.getTotalValue() >= finalFrom && order.getTotalValue() <= finalTo)
                 .collect(Collectors.toList());
-    }
-
-    public User fetchUserByMail(String mail) {
-        List<User> usersWithIndicatedMail = userService.getUsers().stream()
-                .filter(user -> user.getMailAdress().equals(mail.toLowerCase()))
-                .collect(Collectors.toList());
-        if (usersWithIndicatedMail.size() != 0) {
-            return usersWithIndicatedMail.get(0);
-        }
-        return new User();
     }
 
     public List<User> findByLastName(String lastName) {
@@ -142,6 +143,7 @@ public class TheShopService {
                 .collect(Collectors.toList());
     }
 
+
     public List<Product> findProductsWithPriceBeetween(Double from, Double to) {
         if (from == null) {
             from = 0.0;
@@ -155,5 +157,33 @@ public class TheShopService {
                 .collect(Collectors.toList());
     }
 
+    public String isValid(User user) {
+        EmailValidatorDto emailValidatorDto = mailValidatorApiService.checkIfEmailValid(user.getMailAdress());
+        if (emailValidatorDto.isValid()) {
+            return " is valid";
+        } else {
+            return " is not valid";
+        }
+    }
 
+    public Item findItemWithProductIdAndQty(Product product, Integer qty) {
+        List<Item> theItems = itemService.getItems().stream()
+                .filter(item -> item.getProductId().equals(product.getId()))
+                .filter(item -> item.getQuantity().equals(qty))
+                .collect(Collectors.toList());
+        if (theItems.size() != 0) {
+            return theItems.get(0);
+        }
+        return new Item();
+    }
+
+    public Cart findCartIdByUserAndListOfItems(Cart cart) {
+        if (cart.getOrderId() == null) {
+            List<Cart> cartList = cartService.getCarts().stream()
+                    .filter(c -> c.getUserId().equals(Session.getInstance().getCurrentUser().getId()) && c.getItems().equals(Session.getInstance().getCart().getItems()))
+                    .collect(Collectors.toList());
+            return cartList.get(0);
+        }
+        return new Cart();
+    }
 }

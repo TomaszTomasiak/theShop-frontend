@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Item {
 
@@ -18,11 +19,10 @@ public class Item {
 
 //    @JsonProperty
 //    private Long orderId;
-
-    public Item(Long productId, int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
+//
+//    public Item(Long productId, int quantity) {
+//        this.productId = productId;
+//        this.quantity = quantity;
+//    }
 
 }

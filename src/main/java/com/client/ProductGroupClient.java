@@ -1,6 +1,6 @@
 package com.client;
 
-import com.config.AppConfig;
+import com.config.TheShopBackendConfig;
 import com.domain.ProductGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class ProductGroupClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductGroupClient.class);
-    private static final String endpoint = AppConfig.getGroups();
+    private static final String endpoint = TheShopBackendConfig.getGroups();
 
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(endpoint)
