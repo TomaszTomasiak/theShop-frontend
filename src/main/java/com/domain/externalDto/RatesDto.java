@@ -20,5 +20,4 @@ public class RatesDto {
 
     @JsonProperty
     private double mid;
-
 }

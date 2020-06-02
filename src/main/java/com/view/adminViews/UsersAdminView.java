@@ -41,7 +41,6 @@ public class UsersAdminView extends VerticalLayout {
     private Text infoNumber = new Text("");
     private Text infoCheck = new Text("");
     private List<User> list = new ArrayList<>();
-    //private List<CheckEmailsValidation> checkEmailsValidationList = new ArrayList<>();
     private String infoNumberOfUsers = "";
     private String infoIsMailValid = "";
 

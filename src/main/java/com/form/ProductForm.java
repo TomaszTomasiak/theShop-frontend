@@ -46,7 +46,7 @@ public class ProductForm extends FormLayout {
 
     private void updateName() {
         Product product = binder.getBean();
-        productService.updateProduct(product);
+        productService.updateProduct(product.getId(), product);
         setProduct(null);
         productsAdminView.refresh();
     }

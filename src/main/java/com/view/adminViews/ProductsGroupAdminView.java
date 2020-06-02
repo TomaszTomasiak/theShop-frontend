@@ -1,7 +1,6 @@
 package com.view.adminViews;
 
 import com.domain.ProductGroup;
-import com.domain.User;
 import com.form.ProductGroupForm;
 import com.service.ProductGroupService;
 import com.service.TheShopService;
@@ -43,7 +42,6 @@ public class ProductsGroupAdminView extends VerticalLayout {
 
 
     public ProductsGroupAdminView() {
-
         info.setText(infoNumber);
         logged.setText(session.nameOfLoggedUser());
         logout.addClickListener(event -> {

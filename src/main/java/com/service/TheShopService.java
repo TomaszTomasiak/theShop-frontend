@@ -53,7 +53,6 @@ public class TheShopService {
         return (double) temp / multi;
     }
 
-
     public double totalValue(List<Order> orders) {
         double sum = orders.stream()
                 .mapToDouble(Order::getTotalValue)
@@ -76,7 +75,6 @@ public class TheShopService {
     public long numberOfGroups(List<ProductGroup> productGroups) {
         return productGroups.size();
     }
-
 
     public boolean findOrderByUserAndCart() {
         List<Order> list = orderService.getOrders().stream()
@@ -142,7 +140,6 @@ public class TheShopService {
                 .filter(product -> product.getName().contains(name))
                 .collect(Collectors.toList());
     }
-
 
     public List<Product> findProductsWithPriceBeetween(Double from, Double to) {
         if (from == null) {

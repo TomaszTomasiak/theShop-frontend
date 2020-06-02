@@ -5,7 +5,6 @@ import com.domain.ProductOnCart;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.List;
 public class Session implements Serializable {
 
     private static Session session;
-
     private User currentUser;
     private Order order;
     private Product product;

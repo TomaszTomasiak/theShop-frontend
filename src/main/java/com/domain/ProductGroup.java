@@ -14,5 +14,4 @@ public class ProductGroup {
 
     @JsonProperty
     private String name;
-
 }

@@ -10,8 +10,7 @@ public class CurrencyService {
     @Autowired
     private NbpApiClient client;
 
-    @Autowired
-    private TheShopService theShopService;
+    private final TheShopService theShopService = TheShopService.getInstance();
 
     private static CurrencyService currencyService;
 

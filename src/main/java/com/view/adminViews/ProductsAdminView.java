@@ -42,7 +42,6 @@ public class ProductsAdminView extends VerticalLayout {
     private Text info = new Text("");
     private String infoNumber = "";
 
-
     public ProductsAdminView() {
         setAlignItems(Alignment.CENTER);
         info.setText(infoNumber);

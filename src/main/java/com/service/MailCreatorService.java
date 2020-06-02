@@ -1,6 +1,5 @@
 package com.service;
 
-
 import com.config.CompanyConfig;
 import com.domain.ProductOnCart;
 import com.session.Session;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
 import java.util.List;
 
 @Service

@@ -30,5 +30,4 @@ public class CreateUserView extends VerticalLayout {
     public void refresh() {
         setAlignItems(Alignment.CENTER);
     }
-
 }

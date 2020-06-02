@@ -13,8 +13,8 @@ import com.view.adminViews.ProductsGroupAdminView;
 
 public class ProductGroupForm extends FormLayout {
 
-    private ProductsGroupAdminView productsGroupAdminView;
-    private ProductGroupService productGroupService = ProductGroupService.getInstance();
+    private final ProductsGroupAdminView productsGroupAdminView;
+    private final ProductGroupService productGroupService = ProductGroupService.getInstance();
     private TextField name = new TextField("Group name");
     private Button save = new Button("Save new group");
     private Button update = new Button("Update");
@@ -35,8 +35,6 @@ public class ProductGroupForm extends FormLayout {
         update.addClickListener(event -> updateName());
     }
 
-
-
     private ProductGroup createGroup() {
         ProductGroup newGroup = new ProductGroup();
         newGroup.setName(name.getValue());
@@ -45,7 +43,7 @@ public class ProductGroupForm extends FormLayout {
 
     private void updateName() {
         ProductGroup productGroup = binder.getBean();
-        productGroupService.updateGroup(productGroup);
+        productGroupService.updateGroup(productGroup.getId(), productGroup);
         setGroup(null);
         productsGroupAdminView.refresh();
     }
@@ -66,5 +64,4 @@ public class ProductGroupForm extends FormLayout {
             name.focus();
         }
     }
-
 }

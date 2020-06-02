@@ -1,13 +1,11 @@
 package com.client;
 
-
 import com.config.NbpApiConfig;
 import com.domain.externalDto.ResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 
 @Component
@@ -29,7 +27,6 @@ public class NbpApiClient {
                     .encode()
                     .toUri();
             ResponseDto response = restTemplate.getForObject(url, ResponseDto.class);
-            assert response != null;
             return response.getRates()[0].getMid();
         }
     }

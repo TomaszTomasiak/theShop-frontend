@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -21,7 +19,7 @@ public class ProductGroupService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-    private static final String ENDPOINT = TheShopBackendConfig.getProducts();
+    private static final String ENDPOINT = TheShopBackendConfig.getGroups();
     private static ProductGroupService productGroupService;
 
     private ProductGroupService() {

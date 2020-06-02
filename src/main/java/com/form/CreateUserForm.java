@@ -15,14 +15,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.*;
 import com.view.userViews.CreateUserView;
-
 import java.io.IOException;
 
 public class CreateUserForm extends FormLayout {
 
-    private UserService userService = UserService.getInstance();
-    private Session session = Session.getInstance();
-    private TheShopService theShopService = TheShopService.getInstance();
+    private final UserService userService = UserService.getInstance();
+    private final Session session = Session.getInstance();
+    private final TheShopService theShopService = TheShopService.getInstance();
     private IntegerField id = new IntegerField("User ID");
     private TextField firstName = new TextField("First name");
     private TextField lastName = new TextField("Last name");
@@ -56,13 +55,13 @@ public class CreateUserForm extends FormLayout {
         save.addClickListener(event -> {
             try {
                 saveUser();
+                if (isUserCreated()) {
+                    getUI().ifPresent(ui -> ui.navigate("user_view"));
+                } else {
+                    this.createUserView.add(new H1("Ups. Something goes wrong. Try again later"));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            if (isUserCreated()) {
-                getUI().ifPresent(ui -> ui.navigate("user_view"));
-            } else {
-                this.createUserView.add(new H1("Ups. Something goes wrong. Try again later"));
             }
         });
         cancel.addClickListener(event -> cancel());

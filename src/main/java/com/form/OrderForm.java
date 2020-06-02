@@ -1,23 +1,18 @@
 package com.form;
 
 import com.domain.Order;
-import com.domain.User;
 import com.service.OrderService;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.view.adminViews.MainAdminView;
 
-
 public class OrderForm extends FormLayout {
 
-    private MainAdminView mainAdminView;
-    private OrderService orderService = OrderService.getInstance();
+    private final MainAdminView mainAdminView;
+    private final OrderService orderService = OrderService.getInstance();
     private NumberField id = new NumberField("ID");
     private DatePicker ordered = new DatePicker("Date of creation");
     private TextField comments = new TextField("Comments");
@@ -26,18 +21,13 @@ public class OrderForm extends FormLayout {
     private NumberField totalValue = new NumberField("Value");
     private TextField isCompleted = new TextField("Status");
     private Binder<Order> orderBinder = new Binder<>(Order.class);
-//    private Button save = new Button("Save");
-//    private Button delete = new Button("Delete");
 
     public OrderForm(MainAdminView mainAdminView) {
         this.mainAdminView = mainAdminView;
-//        HorizontalLayout buttons = new HorizontalLayout(save, delete);
-//        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        add(ordered, comments, cardId, userId, totalValue, isCompleted);
+        add(id, ordered, comments, cardId, userId, totalValue, isCompleted);
+        id.setVisible(false);
         orderBinder.forField(id).withConverter(Double::longValue, Long::doubleValue).bind(Order::getId, Order::setId);
         orderBinder.bindInstanceFields(this);
-//        save.addClickListener(event -> save());
-//        delete.addClickListener(event -> delete());
     }
 
     public Order createdOrder() {
@@ -45,13 +35,13 @@ public class OrderForm extends FormLayout {
     }
 
     public void save() {
-        OrderService.getInstance().saveOrder(createdOrder());
+        orderService.saveOrder(createdOrder());
         setOrder(null);
         mainAdminView.refresh();
     }
 
     public void delete() {
-        OrderService.getInstance().deleteOrder(createdOrder());
+        orderService.deleteOrder(createdOrder().getId());
         setOrder(null);
         mainAdminView.refresh();
     }

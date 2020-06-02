@@ -1,16 +1,13 @@
 package com.service;
 
-import com.client.CartClient;
 import com.config.TheShopBackendConfig;
 import com.domain.Cart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +15,10 @@ import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
-
 @Service
 public class CartService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CartClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);
     private static final String ENDPOINT = TheShopBackendConfig.getCarts();
     private final RestTemplate restTemplate = new RestTemplate();
     private static CartService cartService;

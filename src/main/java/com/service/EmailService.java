@@ -1,6 +1,5 @@
 package com.service;
 
-
 import com.domain.Mail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

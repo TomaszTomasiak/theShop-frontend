@@ -4,6 +4,7 @@ import com.config.TheShopBackendConfig;
 import com.domain.User;
 
 
+import com.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URI;
 import java.util.List;
@@ -33,7 +35,7 @@ public class UserClientTestSuite {
     private Long id = 12L;
 
     @InjectMocks
-    private UserClient userClient;
+    private UserService userService;
 
     @Mock
     private TheShopBackendConfig theShopBackendConfig;
@@ -56,7 +58,7 @@ public class UserClientTestSuite {
         when(restTemplate.getForObject(url(), User[].class)).thenReturn(users);
 
         //When
-        List<User> fetchedUsers = userClient.getAllUsers();
+        List<User> fetchedUsers = userService.getUsers();
 
         //Then
         assertEquals(1, fetchedUsers.size());
@@ -65,7 +67,7 @@ public class UserClientTestSuite {
     }
 
     @Test
-    public void shouldCreateUser() {
+    public void shouldCreateUser() throws IOException {
         //Given
         User user = new User(1L, firstName, lastName, mail, phoneNumber, password);
         User createdUser = new User(15L, firstName, lastName, mail, phoneNumber, password);
@@ -73,7 +75,8 @@ public class UserClientTestSuite {
         when(restTemplate.postForObject(url(), user, User.class)).thenReturn(createdUser);
 
         //When
-        User newUser = userClient.saveUser(user);
+        userService.createNewUser(user);
+        User newUser = userService.fetchUserByMail(createdUser.getMailAdress());
 
         //Then
         assertEquals(15, newUser.getId());
@@ -88,7 +91,7 @@ public class UserClientTestSuite {
         when(restTemplate.getForObject(url(), User[].class)).thenReturn(null);
 
         //When
-        List<User> fetchedUsers = userClient.getAllUsers();
+        List<User> fetchedUsers = userService.getUsers();
 
         //Then
         assertEquals(0, fetchedUsers.size());

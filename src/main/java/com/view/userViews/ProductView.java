@@ -27,19 +27,20 @@ public class ProductView extends VerticalLayout {
     private final ItemService itemService = ItemService.getInstance();
     private final TheShopService theShopService = TheShopService.getInstance();
     private final Session session = Session.getInstance();
+    private final Product theProduct = session.getProduct();
 
     private Button back = new Button("Back to products site");
     private Button logout = new Button("Log out");
     private Text logged = new Text("");
     private Image image = new Image("http://www.plslights.com/index.php/home/vendor_profile/get_slider/", "src/main/resources/medium-default-product.jpg");
-    private H2 name = new H2(session.getProduct().getName());
-    private Text desc = new Text(session.getProduct().getDescription());
-    private H1 price = new H1("Piece price: ");
-    private Text pricePLN = new Text("PLN " + session.getProduct().getPrice());
-    private Text priceEUR = new Text("EUR " + currencyService.valueEUR(session.getProduct().getPrice()));
-    private Text priceGBP = new Text("GBP " + currencyService.valueGBP(session.getProduct().getPrice()));
-    private Text priceUSD = new Text("USD " + currencyService.valueUSD(session.getProduct().getPrice()));
-    private Text group = new Text(session.getProduct().getName());
+    private H2 name = new H2("");
+    private Text desc = new Text("");
+    private H2 price = new H2("Piece price: ");
+    private Text pricePLN = new Text("");
+    private Text priceEUR = new Text("");
+    private Text priceGBP = new Text("");
+    private Text priceUSD = new Text("");
+    private Text group = new Text("");
     private Text available = new Text("");
     private NumberField qty = new NumberField();
     private Button buyNow = new Button("Buy now");
@@ -55,10 +56,9 @@ public class ProductView extends VerticalLayout {
         header.setFlexGrow(1, back);
         header.setPadding(true);
         header.setSpacing(true);
-        logged.setText(session.nameOfLoggedUser());
 
         back.addClickListener(event -> {
-            session.setProduct(null);
+            session.setProduct(new Product());
             getUI().ifPresent(ui -> ui.navigate("user_view"));
         });
 
@@ -69,6 +69,8 @@ public class ProductView extends VerticalLayout {
 
         VerticalLayout productInfo =
                 new VerticalLayout(name, desc, group, available, price, pricePLN, priceEUR, priceGBP, priceUSD);
+
+        productInfo.setSizeFull();
 
         HorizontalLayout content = new HorizontalLayout(image, productInfo);
         add(content);
@@ -92,6 +94,18 @@ public class ProductView extends VerticalLayout {
                 getUI().ifPresent(ui -> ui.navigate("order_view"));
             }
         });
+        refresh();
+    }
+
+    public void refresh() {
+        logged.setText(session.nameOfLoggedUser());
+        name.setText(theProduct.getName());
+        desc.setText(theProduct.getDescription());
+        group.setText(groupName(theProduct));
+        pricePLN.setText("PLN " + theProduct.getPrice());
+        priceEUR.setText("EUR " + currencyService.valueEUR(theProduct.getPrice()));
+        priceGBP.setText("GBP " + currencyService.valueGBP(theProduct.getPrice()));
+        priceUSD.setText("USD " + currencyService.valueUSD(theProduct.getPrice()));
     }
 
     public Item newItem(double qty) {
@@ -101,7 +115,6 @@ public class ProductView extends VerticalLayout {
         int intQty = (int) qty;
         newItem.setQuantity(intQty);
 
-        //
         Item itemFromDataBase = theShopService.findItemWithProductIdAndQty(session.getProduct(), newItem.getQuantity());
         if(itemFromDataBase.getId() != null) {
             session.setItem(itemFromDataBase);
@@ -128,7 +141,6 @@ public class ProductView extends VerticalLayout {
             session.getCart().getItems().add(item);
         }
     }
-
     public void saveCart() {
         cartService.saveCart(session.getCart());
     }
@@ -139,5 +151,10 @@ public class ProductView extends VerticalLayout {
         productOnCart.setQty(item.getQuantity());
         session.getListOfProductsOnCart().add(productOnCart);
     return productOnCart;
+    }
+
+    public String groupName(Product product) {
+        ProductGroup productGroup = ProductGroupService.getInstance().getGroup(product.getGroupId());
+        return "Grupa produktów: " + productGroup.getName();
     }
 }

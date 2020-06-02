@@ -1,6 +1,5 @@
 package com.client;
 
-
 import com.config.EmailValidatorApiConfig;
 import com.domain.externalDto.EmailValidatorDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 
 @Component

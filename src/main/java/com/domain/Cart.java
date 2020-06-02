@@ -20,5 +20,4 @@ public class Cart {
 
     @JsonProperty
     private Long userId;
-
 }

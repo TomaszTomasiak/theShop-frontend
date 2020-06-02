@@ -63,7 +63,6 @@ public class UserForm extends FormLayout {
 
     private void update() {
         User user = binder.getBean();
-       // userService.updateUser(user.getId(), user);
         setUser(null);
         usersAdminView.refresh();
     }
