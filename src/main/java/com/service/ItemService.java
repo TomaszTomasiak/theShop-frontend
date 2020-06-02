@@ -1,18 +1,30 @@
 package com.service;
 
 import com.client.ItemClient;
+import com.config.TheShopBackendConfig;
 import com.domain.Item;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Optional.ofNullable;
 
 
 @Service
 public class ItemService {
 
-    @Autowired
-    private ItemClient itemClient;
-
+    private final RestTemplate restTemplate = new RestTemplate();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemClient.class);
+    private static final String ENDPOINT = TheShopBackendConfig.getItems();
     private static ItemService itemService;
 
     private ItemService() {
@@ -25,26 +37,58 @@ public class ItemService {
         return itemService;
     }
 
-
+    private URI getUrl() {
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
+                .build().encode().toUri();
+        return url;
+    }
 
     public List<Item> getItems() {
-        return itemClient.getAllItems();
+        try {
+            Item[] usersResponse = restTemplate.getForObject(getUrl(), Item[].class);
+            return Arrays.asList(ofNullable(usersResponse).orElse(new Item[0]));
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new ArrayList<>();
+        }
     }
+
+
 
     public Item getItem(Long id) {
-        return itemClient.getItem(id);
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + id)
+                .build().encode().toUri();
+        try {
+            return restTemplate.getForObject(url, Item.class);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return new Item();
+        }
     }
 
-    public void saveItem(Item item) {
-        itemClient.createNewItem(item);
+    public void deleteItem(Long id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + id)
+                .build().encode().toUri();
+        try {
+            restTemplate.delete(url);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
-    public void updateItem(Item item) {
-        itemClient.updateItem(item.getId(), item);
+    public Item saveItem (Item item) {
+        URI url = getUrl();
+        return restTemplate.postForObject(url, item, Item.class);
     }
 
-    public void deleteItem(Item item) {
-        itemClient.deleteItem(item.getId());
+    public void updateItem(Long id, Item item) {
+        URI url = getUrl();UriComponentsBuilder.fromHttpUrl(ENDPOINT + "/" + id)
+                .build().encode().toUri();
+        try {
+            restTemplate.put(url, item);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
 }

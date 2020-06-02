@@ -34,26 +34,6 @@ public class ProductService {
         return productService;
     }
 
-//    public List<Product> getAllProducts() {
-//        return productClient.getAllProducts();
-//    }
-
-//    public Product getProduct(Long id) {
-//        return productClient.getProduct(id);
-//    }
-
-//    public void saveProduct(Product product) {
-//        productClient.createNewProduct(product);
-//    }
-
-//    public void updateProduct(Product product) {
-//        productClient.updateProduct(product.getId(), product);
-//    }
-
-//    public void deleteProduct(Product product) {
-//        productClient.deleteProduct(product.getId());
-//    }
-
     private URI getUrl() {
         URI url = UriComponentsBuilder.fromHttpUrl(ENDPOINT)
                 .build().encode().toUri();
@@ -96,16 +76,6 @@ public class ProductService {
     }
 
     public void updateProduct(Long productId, Product product) {
-        URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + productId)
-                .build().encode().toUri();
-        try {
-            restTemplate.put(url, product);
-        } catch (RestClientException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    public void updateProduct(Product product) {
         URI url = UriComponentsBuilder.fromHttpUrl(getUrl() + "/" + productId)
                 .build().encode().toUri();
         try {
