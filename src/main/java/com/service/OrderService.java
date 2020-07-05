@@ -6,8 +6,6 @@ import com.domain.Order;
 import com.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,14 +15,11 @@ import java.util.Arrays;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 
-@Service
 public class OrderService {
+//usunąć order confirmation
+    private final EmailService emailService = new EmailService();
 
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private TheShopService theShopService;
+    private final TheShopService theShopService = TheShopService.getInstance();
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);

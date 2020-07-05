@@ -1,16 +1,15 @@
 package com.service;
 
-import com.client.NbpApiClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.config.TheShopBackendConfig;
+import org.springframework.web.client.RestTemplate;
 
-@Service
+
 public class CurrencyService {
 
-    @Autowired
-    private NbpApiClient client;
-
+    private final RestTemplate restTemplate= new RestTemplate() ;
     private final TheShopService theShopService = TheShopService.getInstance();
+
+    private static final String ENDPOINT = TheShopBackendConfig.getCurrency();
 
     private static CurrencyService currencyService;
 
@@ -25,15 +24,22 @@ public class CurrencyService {
     }
 
     public Double getEUR() {
-        return client.getCurrencyFactor("eur");
+        String url = ENDPOINT + "/eur";
+        Double EUR = (Double) restTemplate.getForObject(url, Object.class);
+        return EUR;
     }
 
     public Double getUSD() {
-        return client.getCurrencyFactor("usd");
+        String url = ENDPOINT + "/usd";
+        Double USD = (Double) restTemplate.getForObject(url, Object.class);
+        return USD;
     }
 
     public Double getGBP() {
-        return client.getCurrencyFactor("gbp");
+        String url = ENDPOINT + "/gbp";
+        Double GBP = (Double) restTemplate.getForObject(url, Object.class);
+
+        return GBP;
     }
 
     public Double valueEUR(Double valuePln) {

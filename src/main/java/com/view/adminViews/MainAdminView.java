@@ -20,9 +20,9 @@ import java.util.List;
 @Route("admin_main")
 public class MainAdminView extends VerticalLayout {
 
-    private Session session = Session.getInstance();
-    private OrderService orderService = OrderService.getInstance();
-    private TheShopService theShopService = TheShopService.getInstance();
+    private final Session session = Session.getInstance();
+    private final OrderService orderService = OrderService.getInstance();
+    private final TheShopService theShopService = TheShopService.getInstance();
     private List<Order> listOfOrders = new ArrayList<>();
     private NumberField valueFrom = new NumberField("Value from");
     private NumberField valueTo = new NumberField("Value from");

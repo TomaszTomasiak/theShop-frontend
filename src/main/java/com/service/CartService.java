@@ -15,7 +15,7 @@ import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
-@Service
+
 public class CartService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CartService.class);

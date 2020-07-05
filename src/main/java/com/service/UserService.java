@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import static java.util.Optional.ofNullable;
 
-@Service
+
 public class UserService {
 
     private final RestTemplate restTemplate = new RestTemplate();

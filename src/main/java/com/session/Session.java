@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Component
 public class Session implements Serializable {
 
     private static Session session;

@@ -3,7 +3,6 @@ package com.validator;
 import org.springframework.stereotype.Component;
 import java.util.Random;
 
-@Component
 public class Validator {
 
     private static Validator validator;

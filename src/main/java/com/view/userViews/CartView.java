@@ -22,7 +22,7 @@ import com.validator.Validator;
 @Route("cart_view")
 public class CartView extends VerticalLayout {
 
-    private CurrencyService currencyService = CurrencyService.getInstance();
+    CurrencyService currencyService = CurrencyService.getInstance();
     private OrderService orderService = OrderService.getInstance();
     private CartService cartService = CartService.getInstance();
     private Validator validator = Validator.getInstance();

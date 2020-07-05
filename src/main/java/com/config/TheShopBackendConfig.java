@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TheShopBackendConfig {
 
-   private static TheShopBackendConfig theShopBackendConfig;
+//   private static TheShopBackendConfig theShopBackendConfig;
 
    private static final String BACKEND_ENDPOINT = "http://localhost:4600/api/v1/";
    private static final String CARTS = "carts";
@@ -14,16 +14,18 @@ public class TheShopBackendConfig {
    private static final String ORDERS = "orders";
    private static final String GROUPS = "groups";
    private static final String USERS = "users";
+   private static final String CURRENCY = "currency";
+   private static final String MAIL_VALIDATION = "mailValidation";
 
-   private TheShopBackendConfig() {
-   }
-
-   public static TheShopBackendConfig getInstance() {
-      if (theShopBackendConfig == null) {
-         theShopBackendConfig = new TheShopBackendConfig();
-      }
-      return theShopBackendConfig;
-   }
+//   private TheShopBackendConfig() {
+//   }
+//
+//   public static TheShopBackendConfig getInstance() {
+//      if (theShopBackendConfig == null) {
+//         theShopBackendConfig = new TheShopBackendConfig();
+//      }
+//      return theShopBackendConfig;
+//   }
 
    public static String getBackendEndpoint() {
       return BACKEND_ENDPOINT;
@@ -48,6 +50,10 @@ public class TheShopBackendConfig {
    public static String getGroups() {
       return BACKEND_ENDPOINT + GROUPS;
    }
+
+   public static String getCurrency() { return BACKEND_ENDPOINT + CURRENCY; }
+
+   public static String getMailValidation() { return BACKEND_ENDPOINT + MAIL_VALIDATION; }
 
    public static String getUsers() {
       return BACKEND_ENDPOINT + USERS;

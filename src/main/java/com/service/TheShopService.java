@@ -3,36 +3,21 @@ package com.service;
 import com.domain.*;
 import com.domain.externalDto.EmailValidatorDto;
 import com.session.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 public class TheShopService {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private ProductGroupService productGroupService;
-
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private ItemService itemService;
-
-    @Autowired
-    private CartService cartService;
-
-    @Autowired
-    private MailValidatorApiService mailValidatorApiService;
+    private final UserService userService = UserService.getInstance();
+    private final ProductService productService = ProductService.getInstance();
+    private final ProductGroupService productGroupService = ProductGroupService.getInstance();
+    private final OrderService orderService = OrderService.getInstance();
+    private final ItemService itemService = ItemService.getInstance();
+    private final CartService cartService = CartService.getInstance();
+    // do usunięcia
+    private final MailValidatorApiService mailValidatorApiService = new MailValidatorApiService();
 
     private final Session session = Session.getInstance();
     private static TheShopService theShopService;

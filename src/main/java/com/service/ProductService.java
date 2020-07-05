@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import static java.util.Optional.ofNullable;
 
-@Service
+
 public class ProductService {
 
     private final RestTemplate restTemplate = new RestTemplate();
