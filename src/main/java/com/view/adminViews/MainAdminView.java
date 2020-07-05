@@ -99,13 +99,13 @@ public class MainAdminView extends VerticalLayout {
     }
 
     public void updateByDate() {
-        this.listOfOrders = theShopService.findOrdersByDateOfOrdered(orderedFrom.getValue(), orderedTo.getValue());
+        this.listOfOrders = orderService.findOrdersByDateOfOrdered(orderedFrom.getValue(), orderedTo.getValue());
         orderGrid.setItems(listOfOrders);
         infoNumber = "Number of displayed orders is: " + theShopService.numberOfOrders(listOfOrders);
         infoValue = "Value of displayed orders is: " + theShopService.totalValue(listOfOrders) + " PLN";
     }
     public void updateByValue() {
-        this.listOfOrders = theShopService.findOrdersWithTotalValueBeetween(valueFrom.getValue(), valueTo.getValue());
+        this.listOfOrders = orderService.findOrdersWithTotalValueBeetween(valueFrom.getValue(), valueTo.getValue());
         orderGrid.setItems(listOfOrders);
         infoNumber = "Number of displayed orders is: " + theShopService.numberOfOrders(listOfOrders);
         infoValue = "Value of displayed orders is: " + theShopService.totalValue(listOfOrders) + " PLN";

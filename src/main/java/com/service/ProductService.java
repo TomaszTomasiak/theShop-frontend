@@ -13,6 +13,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.util.Optional.ofNullable;
 
 
@@ -82,5 +84,24 @@ public class ProductService {
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    public List<Product> findProductByName(String name) {
+        return getAllProducts().stream()
+                .filter(product -> product.getName().contains(name))
+                .collect(Collectors.toList());
+    }
+
+    public List<Product> findProductsWithPriceBeetween(Double from, Double to) {
+        if (from == null) {
+            from = 0.0;
+        } else if (to == null) {
+            to = Double.POSITIVE_INFINITY;
+        }
+        Double finalFrom = from;
+        Double finalTo = to;
+        return getAllProducts().stream()
+                .filter(product -> product.getPrice() >= finalFrom && product.getPrice() <= finalTo)
+                .collect(Collectors.toList());
     }
 }

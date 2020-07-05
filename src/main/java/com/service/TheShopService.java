@@ -10,16 +10,11 @@ import java.util.stream.Collectors;
 
 public class TheShopService {
 
-    private final UserService userService = UserService.getInstance();
-    private final ProductService productService = ProductService.getInstance();
-    private final ProductGroupService productGroupService = ProductGroupService.getInstance();
-    private final OrderService orderService = OrderService.getInstance();
+
     private final ItemService itemService = ItemService.getInstance();
     private final CartService cartService = CartService.getInstance();
-    // do usunięcia
     private final MailValidatorApiService mailValidatorApiService = new MailValidatorApiService();
 
-    private final Session session = Session.getInstance();
     private static TheShopService theShopService;
 
     private TheShopService() {
@@ -59,84 +54,6 @@ public class TheShopService {
 
     public long numberOfGroups(List<ProductGroup> productGroups) {
         return productGroups.size();
-    }
-
-    public boolean findOrderByUserAndCart() {
-        List<Order> list = orderService.getOrders().stream()
-                .filter(o -> o.getUserId().equals(session.getCurrentUser().getId()) && o.getCartId().equals(session.getCart().getId()))
-                .collect(Collectors.toList());
-        if (list.size() != 0) {
-            session.setOrder(list.get(0));
-            return true;
-        }
-        return false;
-    }
-
-    public List<Order> findOrdersByDateOfOrdered(LocalDate from, LocalDate to) {
-        if (from == null) {
-            from = LocalDate.now().minusYears(Integer.MAX_VALUE);
-        } else if (to == null) {
-            to = LocalDate.now();
-        }
-        LocalDate finalFrom = from;
-        LocalDate finalTo = to;
-        return orderService.getOrders().stream()
-                .filter(order -> order.getOrdered().isAfter(finalFrom) && order.getOrdered().isBefore(finalTo))
-                .collect(Collectors.toList());
-    }
-
-    public List<Order> findOrdersWithTotalValueBeetween(Double from, Double to) {
-        if (from == null) {
-            from = 0.0;
-        } else if (to == null) {
-            to = Double.POSITIVE_INFINITY;
-        }
-        Double finalFrom = from;
-        Double finalTo = to;
-        return orderService.getOrders().stream()
-                .filter(order -> order.getTotalValue() >= finalFrom && order.getTotalValue() <= finalTo)
-                .collect(Collectors.toList());
-    }
-
-    public List<User> findByLastName(String lastName) {
-        return userService.getUsers().stream().filter(user -> user.getLastName().contains(lastName)).collect(Collectors.toList());
-    }
-
-    public List<User> findByFirstName(String firstName) {
-        return userService.getUsers().stream().filter(user -> user.getFirstName().contains(firstName)).collect(Collectors.toList());
-    }
-
-    public List<User> findByMail(String mail) {
-        return userService.getUsers().stream().filter(user -> user.getMailAdress().contains(mail)).collect(Collectors.toList());
-    }
-
-    public List<User> findByPhoneNumber(String phone) {
-        return userService.getUsers().stream().filter(user -> user.getPhoneNumber().contains(phone)).collect(Collectors.toList());
-    }
-
-    public List<ProductGroup> findGroupByName(String name) {
-        return productGroupService.getAllGroups().stream()
-                .filter(product -> product.getName().contains(name))
-                .collect(Collectors.toList());
-    }
-
-    public List<Product> findProductByName(String name) {
-        return productService.getAllProducts().stream()
-                .filter(product -> product.getName().contains(name))
-                .collect(Collectors.toList());
-    }
-
-    public List<Product> findProductsWithPriceBeetween(Double from, Double to) {
-        if (from == null) {
-            from = 0.0;
-        } else if (to == null) {
-            to = Double.POSITIVE_INFINITY;
-        }
-        Double finalFrom = from;
-        Double finalTo = to;
-        return productService.getAllProducts().stream()
-                .filter(product -> product.getPrice() >= finalFrom && product.getPrice() <= finalTo)
-                .collect(Collectors.toList());
     }
 
     public String isValid(User user) {

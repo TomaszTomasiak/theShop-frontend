@@ -80,7 +80,7 @@ public class UserView extends VerticalLayout {
     }
 
     public void filterByName() {
-        products = theShopService.findProductByName(filter.getValue());
+        products = productService.findProductByName(filter.getValue());
         gridProduct.setItems(products);
     }
 

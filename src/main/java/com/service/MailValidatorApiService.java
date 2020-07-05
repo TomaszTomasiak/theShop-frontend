@@ -15,9 +15,7 @@ public class MailValidatorApiService {
     private static final String ENDPOINT = TheShopBackendConfig.getMailValidation();
 
     public EmailValidatorDto checkIfEmailValid(String mail) {
-
         String url = ENDPOINT + "/" + mail;
-        EmailValidatorDto isValid = (EmailValidatorDto) restTemplate.getForObject(url, Object.class);
-        return isValid;
+        return restTemplate.getForObject(url, EmailValidatorDto.class);
     }
 }

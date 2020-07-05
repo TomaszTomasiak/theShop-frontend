@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,7 +43,7 @@ public class ProductView extends VerticalLayout {
     private Text priceUSD = new Text("");
     private Text group = new Text("");
     private Text available = new Text("");
-    private NumberField qty = new NumberField();
+    private NumberField qty = new NumberField("Pieces");
     private Button buyNow = new Button("Buy now");
     private Button addToCart = new Button("Add to cart");
 
@@ -80,6 +81,7 @@ public class ProductView extends VerticalLayout {
         HorizontalLayout buyLeyout = new HorizontalLayout(qty, buyNow);
         add(buyLeyout);
 
+        qty.setValue(1.0);
         addToCart.addClickListener(event -> {
             if (qty.getValue() > 0) {
                 newItem(qty.getValue());
@@ -92,6 +94,8 @@ public class ProductView extends VerticalLayout {
                 newItem(qty.getValue());
                 saveCart();
                 getUI().ifPresent(ui -> ui.navigate("order_view"));
+            } else {
+                add(new Notification("You have to indicate number of pieces"));
             }
         });
         refresh();

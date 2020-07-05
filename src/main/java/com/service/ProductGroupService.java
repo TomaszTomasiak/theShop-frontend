@@ -12,6 +12,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import static java.util.Optional.ofNullable;
 
 public class ProductGroupService {
@@ -70,5 +72,11 @@ public class ProductGroupService {
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    public List<ProductGroup> findGroupByName(String name) {
+        return getAllGroups().stream()
+                .filter(product -> product.getName().contains(name))
+                .collect(Collectors.toList());
     }
 }

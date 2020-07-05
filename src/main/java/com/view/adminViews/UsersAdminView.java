@@ -111,25 +111,25 @@ public class UsersAdminView extends VerticalLayout {
     }
 
     public void updateLastName() {
-        this.list = theShopService.findByLastName(lastNameFilter.getValue());
+        this.list = userService.findByLastName(lastNameFilter.getValue());
         grid.setItems(list);
         infoNumberOfUsers = "Number of displayed users is: " + theShopService.numberOfUsers(list);
     }
 
     public void updateFirstName() {
-        this.list = theShopService.findByFirstName(firstNameFilter.getValue());
+        this.list = userService.findByFirstName(firstNameFilter.getValue());
         grid.setItems(list);
         infoNumberOfUsers = "Number of displayed users is: " + theShopService.numberOfUsers(list);
     }
 
     public void updateMail() {
-        this.list = theShopService.findByMail(mailFilter.getValue());
+        this.list = userService.findByMail(mailFilter.getValue());
         grid.setItems(list);
         infoNumberOfUsers = "Number of displayed users is: " + theShopService.numberOfUsers(list);
     }
 
     public void updatePhone() {
-        this.list = theShopService.findByPhoneNumber(phoneFilter.getValue());
+        this.list = userService.findByPhoneNumber(phoneFilter.getValue());
         grid.setItems(list);
         infoNumberOfUsers = "Number of displayed users is: " + theShopService.numberOfUsers(list);
     }

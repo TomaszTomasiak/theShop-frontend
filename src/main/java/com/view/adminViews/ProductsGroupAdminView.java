@@ -90,7 +90,7 @@ public class ProductsGroupAdminView extends VerticalLayout {
     }
 
     public void updateName() {
-        this.productGroupList = theShopService.findGroupByName(findByName.getValue());
+        this.productGroupList = productGroupService.findGroupByName(findByName.getValue());
         grid.setItems(productGroupList);
         infoNumber = "Number of displayed groups: " + theShopService.numberOfGroups(productGroupList);
     }

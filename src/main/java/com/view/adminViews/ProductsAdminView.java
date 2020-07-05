@@ -101,7 +101,7 @@ public class ProductsAdminView extends VerticalLayout {
     }
 
     public void updateByName() {
-        this.list = theShopService.findProductByName(findByName.getValue());
+        this.list = productService.findProductByName(findByName.getValue());
         grid.setItems(list);
         infoNumber = "Number of displayed products: " + theShopService.numberOfProducts(list);
     }
@@ -117,7 +117,7 @@ public class ProductsAdminView extends VerticalLayout {
     }
 
     public void updateByPrice() {
-        this.list = theShopService.findProductsWithPriceBeetween(priceFrom.getValue(), priceTo.getValue());
+        this.list = productService.findProductsWithPriceBeetween(priceFrom.getValue(), priceTo.getValue());
         grid.setItems(list);
         infoNumber = "Number of displayed products: " + theShopService.numberOfProducts(list);
     }

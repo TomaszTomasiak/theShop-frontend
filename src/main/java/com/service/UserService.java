@@ -88,4 +88,22 @@ public class UserService {
             return new User();
         }
     }
+
+
+
+    public List<User> findByLastName(String lastName) {
+        return getUsers().stream().filter(user -> user.getLastName().contains(lastName)).collect(Collectors.toList());
+    }
+
+    public List<User> findByFirstName(String firstName) {
+        return getUsers().stream().filter(user -> user.getFirstName().contains(firstName)).collect(Collectors.toList());
+    }
+
+    public List<User> findByMail(String mail) {
+        return getUsers().stream().filter(user -> user.getMailAdress().contains(mail)).collect(Collectors.toList());
+    }
+
+    public List<User> findByPhoneNumber(String phone) {
+        return getUsers().stream().filter(user -> user.getPhoneNumber().contains(phone)).collect(Collectors.toList());
+    }
 }
